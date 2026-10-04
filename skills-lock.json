@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "react-native-expo-engineering-skill": {
+      "source": "emcahell/react-native-expo-engineering-skill",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "82442d4d71834d97403730166341340ce20e257509b3c5844f2c55e629046ef4"
+    }
+  }
+}
