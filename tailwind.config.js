@@ -6,7 +6,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Geist", "Inter", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Tipografía sin definir todavía: se usa la del sistema.
+        sans: ["ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
         rounded: ["SF Pro Rounded", "Hiragino Maru Gothic ProN", "Meiryo", "MS PGothic", "sans-serif"],
         serif: ["Georgia", "Times New Roman", "serif"],
@@ -97,6 +98,18 @@ module.exports = {
         },
         "on-surface": "#fafafa",
         "on-surface-variant": "#a1a1aa",
+      },
+      // Escala tipográfica en px (no rem): en nativo `rem` depende de la base
+      // del runtime y termina siendo frágil. 11px es el mínimo legible;
+      // 16px es el cuerpo estándar.
+      fontSize: {
+        "2xs": ["11px", { lineHeight: "14px" }],
+        xs: ["12px", { lineHeight: "16px" }],
+        sm: ["14px", { lineHeight: "20px" }],
+        base: ["16px", { lineHeight: "22px" }],
+        lg: ["18px", { lineHeight: "24px" }],
+        xl: ["20px", { lineHeight: "26px" }],
+        "2xl": ["24px", { lineHeight: "30px" }],
       },
       borderRadius: {
         sm: "0.25rem",
