@@ -181,3 +181,56 @@ El sistema soporta **Modo Claro (Light Mode)** y **Modo Oscuro (Dark Mode)** nat
 ## 7. Tailwind Mapping Recommendation
 
 Para facilitar su uso con NativeWind, se recomienda mapear estos tokens en `tailwind.config.js` extendiendo `colors`, `fontFamily`, `borderRadius`, `spacing`, etc., siguiendo las convenciones Material 3 adaptadas al diseño Obsidian dual-mode. Usar `dark:` variants para alternancia automática con `className="dark"` o basada en `colorScheme`.
+
+---
+
+## 7.1 Paridad Web ↔ Móvil (obligatorio)
+
+**Web y móvil deben verse idénticos.** El flujo de desarrollo es web en PC + Expo Go en móvil, así que cualquier divergencia visual se detecta tarde.
+
+Reglas:
+
+- Una sola implementación por componente. No crear archivos `.web.tsx` / `.ios.tsx` / `.android.tsx` para resolver diferencias de estilo.
+- Nada de posicionamiento dependiente de plataforma dentro de la lógica JS. La única excepción admitida es el `paddingBottom`/`height` de la barra de tabs, que usa `useSafeAreaInsets()` para respetar el home indicator en móvil y cae a un valor fijo en web.
+- Cualquier componente que dependa de una API nativa sin equivalente web debe tener un fallback explícito en la misma ruta de código, no en un archivo paralelo.
+- Antes de dar por terminado un cambio de UI, validar que compilan **ambas** plataformas (ver §8.3).
+
+---
+
+## 8. Iconografía
+
+**Librería única en toda la app: `phosphor-react-native`.**
+
+| Contexto | Librería |
+|---|---|
+| Barra de navegación (`src/components/app-tabs.tsx`) | `phosphor-react-native` |
+| Pantallas, modales, botones, componentes internos | `phosphor-react-native` |
+
+### 8.1 Por qué `phosphor-react-native` en todas partes
+
+La barra usa `Tabs` de JS (expo-router), **no** `NativeTabs`. Esto es deliberado:
+
+- `NativeTabs` no existe en web. Su fallback (`NativeTabsView.web.js`) renderiza un
+  `TabsList` **horizontal** de Radix UI, solo texto y con estilos propios:
+  el tab quedaba arriba y visualmente distinto al móvil.
+- `NativeTabs` tampoco admite iconos SVG, lo que obligaba a mantener **dos**
+  librerías de iconos y dos implementaciones de la barra que divergen con el tiempo.
+
+Con `Tabs` de JS hay **una sola implementación** que corre igual en web y en móvil,
+respeta `DESIGN.md` y permite iconos con `weight`/`color` dinámicos.
+
+### 8.2 Reglas
+
+- Importar siempre con sufijo `Icon`: `import { HouseIcon, PackageIcon } from 'phosphor-react-native';`
+- `weight` por defecto: `regular`. Usar `fill` para el tab seleccionado, `duotone` para énfasis, `bold` para acciones críticas.
+- Los iconos de tab se registran en el mapa `ICONS` de `app-tabs.tsx` y se pintan con `TabIcon`, que aplica `fill` cuando `focused`.
+- No introducir `@expo/vector-icons` ni otra librería de iconos.
+
+### 8.3 Verificación
+
+Un cambio en la barra o en iconos es válido si **ambos** exports compilan sin errores:
+
+```bash
+npx expo export --platform android
+npx expo export --platform web
+```

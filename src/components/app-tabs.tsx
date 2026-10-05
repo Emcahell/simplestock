@@ -1,51 +1,116 @@
-import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { useColorScheme } from "react-native";
+import { Tabs } from 'expo-router';
+import { Platform, StyleSheet, type ColorValue } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   HouseIcon,
   PackageIcon,
   ScrollIcon,
   TrayIcon,
-} from "phosphor-react-native";
+  type Icon,
+} from 'phosphor-react-native';
 
-import { Colors } from "@/constants/theme";
+import { useTheme } from '@/hooks/use-theme';
 
-export default function AppTabs() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === "unspecified" ? "light" : scheme];
+const ICONS: Record<string, Icon> = {
+  index: HouseIcon,
+  productos: PackageIcon,
+  ventas: ScrollIcon,
+  surtidos: TrayIcon,
+};
 
+type TabIconProps = { color: ColorValue; focused: boolean; size: number };
+
+function TabIcon({ name, color, focused, size }: TabIconProps & { name: string }) {
+  const IconComponent = ICONS[name];
   return (
-    <NativeTabs
-      backgroundColor={colors.background}
-      indicatorColor={colors.backgroundElement}
-      labelStyle={{ selected: { color: colors.text } }}
-    >
-      <NativeTabs.Trigger name="index">
-        <NativeTabs.Trigger.Label>Inicio</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={<HouseIcon size={24} color={colors.text} weight="regular" />}
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="productos">
-        <NativeTabs.Trigger.Label>Productos</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={<PackageIcon size={24} color={colors.text} weight="regular" />}
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="ventas">
-        <NativeTabs.Trigger.Label>Ventas</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={<ScrollIcon size={24} color={colors.text} weight="regular" />}
-        />
-      </NativeTabs.Trigger>
-
-      <NativeTabs.Trigger name="surtidos">
-        <NativeTabs.Trigger.Label>Surtidos</NativeTabs.Trigger.Label>
-        <NativeTabs.Trigger.Icon
-          src={<TrayIcon size={24} color={colors.text} weight="regular" />}
-        />
-      </NativeTabs.Trigger>
-    </NativeTabs>
+    <IconComponent
+      size={size}
+      color={color as string}
+      weight={focused ? 'fill' : 'regular'}
+    />
   );
 }
+
+export default function AppTabs() {
+  const theme = useTheme();
+  const insets = useSafeAreaInsets();
+
+  return (
+    <Tabs
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: theme.primary,
+        tabBarInactiveTintColor: theme.textSecondary,
+        tabBarStyle: [
+          styles.bar,
+          {
+            backgroundColor: theme.background,
+            borderTopColor: theme.border,
+            paddingBottom: Math.max(insets.bottom, 8),
+            height: 56 + Math.max(insets.bottom, 8),
+          },
+        ],
+        tabBarLabelStyle: styles.label,
+        tabBarItemStyle: styles.item,
+        sceneStyle: { backgroundColor: theme.background },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Inicio',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabIcon name="index" color={color} focused={focused} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="productos"
+        options={{
+          title: 'Productos',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabIcon name="productos" color={color} focused={focused} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ventas"
+        options={{
+          title: 'Ventas',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabIcon name="ventas" color={color} focused={focused} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="surtidos"
+        options={{
+          title: 'Surtidos',
+          tabBarIcon: ({ color, focused, size }) => (
+            <TabIcon name="surtidos" color={color} focused={focused} size={size} />
+          ),
+        }}
+      />
+    </Tabs>
+  );
+}
+
+const styles = StyleSheet.create({
+  bar: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingTop: 8,
+    ...Platform.select({
+      web: { paddingBottom: 8, height: 56 },
+      default: {},
+    }),
+  },
+  item: {
+    paddingTop: 0,
+  },
+  label: {
+    fontSize: 11,
+    fontWeight: '500',
+    letterSpacing: 0.02,
+    marginTop: 2,
+  },
+});
