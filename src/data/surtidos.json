@@ -1,0 +1,62 @@
+{
+  "appName": "SimpleStock",
+  "action": {
+    "label": "Registrar nuevo surtido",
+    "icon": "plus"
+  },
+  "filter": {
+    "navigateLabel": "Seleccionar periodo",
+    "cancelLabel": "Cancelar",
+    "movementsLabel": "MOVIMIENTOS",
+    "placeholder": "Todos los meses"
+  },
+  "periods": [
+    { "id": "all", "label": "Todos los meses", "count": 24 },
+    { "id": "2023-11", "label": "Noviembre 2023", "count": 14 },
+    { "id": "2023-10", "label": "Octubre 2023", "count": 10 }
+  ],
+  "history": {
+    "title": "Historial Reciente",
+    "shownSuffix": "mostrados",
+    "emptyLabel": "Sin ingresos para el periodo seleccionado",
+    "resultingStockLabel": "Stock resultante:"
+  },
+  "restocks": [
+    {
+      "id": "sur-402",
+      "periodId": "2023-11",
+      "dateLabel": "14 Nov 2023, 11:20 AM",
+      "productName": "Monitor Gamer 27\" 144Hz IPS",
+      "quantityLabel": "+25 uds",
+      "referenceLabel": "Lote #SUR-402 · TechSupply Inc.",
+      "stockLabel": "38 unidades"
+    },
+    {
+      "id": "rem-8812",
+      "periodId": "2023-11",
+      "dateLabel": "12 Nov 2023, 04:45 PM",
+      "productName": "Teclado Mecánico RGB Switch Red",
+      "quantityLabel": "+50 uds",
+      "referenceLabel": "Remisión #REM-8812 · KeyLogic Global",
+      "stockLabel": "112 unidades"
+    },
+    {
+      "id": "sur-398",
+      "periodId": "2023-11",
+      "dateLabel": "08 Nov 2023, 10:10 AM",
+      "productName": "Mouse Óptico Ergonómico 4K",
+      "quantityLabel": "+70 uds",
+      "referenceLabel": "Lote #SUR-398 · Peripherals Express",
+      "stockLabel": "85 unidades"
+    },
+    {
+      "id": "sur-377",
+      "periodId": "2023-10",
+      "dateLabel": "26 Oct 2023, 09:05 AM",
+      "productName": "Hub USB-C 8 en 1",
+      "quantityLabel": "+40 uds",
+      "referenceLabel": "Lote #SUR-377 · VoltEdge Ltd.",
+      "stockLabel": "64 unidades"
+    }
+  ]
+}

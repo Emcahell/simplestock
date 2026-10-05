@@ -6,12 +6,15 @@
     "orientation": "portrait",
     "scheme": "simplestock",
     "userInterfaceStyle": "automatic",
-    "ios": {},
+    "ios": {
+      "bundleIdentifier": "com.anonymous.simplestock"
+    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.simplestock"
     },
     "web": {
       "output": "static",

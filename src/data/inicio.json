@@ -1,0 +1,100 @@
+{
+  "appName": "SimpleStock",
+  "greeting": {
+    "name": "Emmanuel",
+    "dateLabel": "Hoy, 24 de Octubre"
+  },
+  "metrics": {
+    "products": {
+      "label": "Productos",
+      "icon": "package",
+      "value": "248",
+      "unit": "ítems"
+    },
+    "sales": {
+      "label": "Ventas Hoy",
+      "icon": "scroll",
+      "amountWhole": "$1,420",
+      "amountCents": ".50",
+      "footerIcon": "storefront",
+      "footerLabel": "18 ventas"
+    }
+  },
+  "quickActions": {
+    "title": "Accesos Rápidos",
+    "items": [
+      {
+        "id": "registrar-venta",
+        "label": "Registrar Venta",
+        "icon": "plusSimple",
+        "tone": "primary",
+        "variant": "primary"
+      },
+      {
+        "id": "ingresar-surtido",
+        "label": "Ingresar Surtido",
+        "icon": "plusSimple",
+        "tone": "success",
+        "variant": "surface"
+      },
+      {
+        "id": "nuevo-articulo",
+        "label": "Nuevo Artículo",
+        "icon": "plusSimple",
+        "tone": "primary",
+        "variant": "surface"
+      }
+    ]
+  },
+  "activity": {
+    "title": "Últimas Actividades",
+    "linkLabel": "Ver registro",
+    "items": [
+      {
+        "id": "act-1042",
+        "icon": "scroll",
+        "tone": "primary",
+        "title": "Venta completada #1042",
+        "subtitle": "Terminal TPV #1 • 2 artículos",
+        "value": "+$85.00",
+        "time": "Hace 15m"
+      },
+      {
+        "id": "act-lote-89",
+        "icon": "tray",
+        "tone": "success",
+        "title": "Surtido de Mercancía",
+        "subtitle": "+50u Auriculares Pro • Lote #89",
+        "value": "+50 un.",
+        "time": "Hace 1h"
+      },
+      {
+        "id": "act-teclado",
+        "icon": "plusCircle",
+        "tone": "primary",
+        "title": "Producto Creado",
+        "subtitle": "Teclado Mecánico RGB 60%",
+        "value": "Nuevo",
+        "time": "Hace 2h"
+      },
+      {
+        "id": "act-auditoria",
+        "icon": "sliders",
+        "tone": "muted",
+        "title": "Ajuste de Auditoría",
+        "subtitle": "Corrección de conteo físico • Pasillo B",
+        "value": "-1 un.",
+        "time": "Hace 3h"
+      },
+      {
+        "id": "act-1041",
+        "icon": "scroll",
+        "tone": "primary",
+        "title": "Venta completada #1041",
+        "subtitle": "Pago Efectivo • 3 artículos",
+        "value": "+$145.20",
+        "time": "Hace 4h"
+      }
+    ]
+  }
+}

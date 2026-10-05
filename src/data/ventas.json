@@ -1,0 +1,145 @@
+{
+  "appName": "SimpleStock",
+  "action": {
+    "label": "Registrar nueva venta",
+    "icon": "plus"
+  },
+  "filter": {
+    "all": {
+      "id": "all",
+      "label": "Todo"
+    },
+    "month": {
+      "id": "month",
+      "label": "Este mes"
+    },
+    "navigateLabel": "Navegar meses",
+    "applyLabel": "Aplicar",
+    "cancelLabel": "Cancelar"
+  },
+  "monthNames": [
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre"
+  ],
+  "summary": {
+    "label": "Total Recaudado",
+    "currency": "USD"
+  },
+  "totals": {
+    "all": {
+      "amount": "$8,450.00",
+      "count": 64
+    },
+    "months": [
+      { "month": 0, "amount": "$1,240.00", "count": 9 },
+      { "month": 1, "amount": "$980.50", "count": 7 },
+      { "month": 2, "amount": "$1,115.00", "count": 8 },
+      { "month": 3, "amount": "$870.00", "count": 6 },
+      { "month": 4, "amount": "$1,320.75", "count": 10 },
+      { "month": 5, "amount": "$760.25", "count": 5 },
+      { "month": 6, "amount": "$1,455.00", "count": 11 },
+      { "month": 7, "amount": "$640.00", "count": 4 },
+      { "month": 8, "amount": "$1,180.00", "count": 8 },
+      { "month": 9, "amount": "$1,142.50", "count": 8 },
+      { "month": 10, "amount": "$512.00", "count": 4 },
+      { "month": 11, "amount": "$275.00", "count": 2 }
+    ]
+  },
+  "sales": {
+    "title": "Ventas",
+    "noteLabel": "Ver nota de entrega",
+    "items": [
+      {
+        "id": "VEN-2023-089",
+        "date": "2026-10-05",
+        "timeLabel": "Hoy, 14:35",
+        "paymentMethod": "Tarjeta",
+        "paymentIcon": "creditCard",
+        "itemsSummary": "2x Teclado Mecánico RGB Pro, 1x Mouse Gamer Ultra, 3x Cable USB-C Reforzado",
+        "amount": "$265.00"
+      },
+      {
+        "id": "VEN-2023-088",
+        "date": "2026-10-05",
+        "timeLabel": "Hoy, 12:10",
+        "paymentMethod": "Transferencia",
+        "paymentIcon": "bank",
+        "itemsSummary": "1x Monitor Curvo 27\" 165Hz, 1x Soporte Articulado VESA",
+        "amount": "$389.50"
+      },
+      {
+        "id": "VEN-2023-087",
+        "date": "2026-10-04",
+        "timeLabel": "24 Oct, 18:40",
+        "paymentMethod": "Efectivo",
+        "paymentIcon": "banknote",
+        "itemsSummary": "4x Memoria RAM DDR5 16GB 5600MHz Kingston",
+        "amount": "$180.00"
+      },
+      {
+        "id": "VEN-2023-086",
+        "date": "2026-10-04",
+        "timeLabel": "24 Oct, 11:20",
+        "paymentMethod": "Tarjeta de Crédito",
+        "paymentIcon": "creditCard",
+        "itemsSummary": "1x Disco SSD NVMe 2TB PCIe 4.0, 1x Enclosure Externo USB 3.2",
+        "amount": "$145.20"
+      },
+      {
+        "id": "VEN-2023-085",
+        "date": "2026-10-03",
+        "timeLabel": "23 Oct, 16:05",
+        "paymentMethod": "Efectivo",
+        "paymentIcon": "banknote",
+        "itemsSummary": "1x Fuente de Poder 850W Gold Modular, 1x Pasta Térmica Arctic MX-4",
+        "amount": "$162.00"
+      },
+      {
+        "id": "VEN-2023-084",
+        "date": "2026-09-29",
+        "timeLabel": "29 Sep, 11:40",
+        "paymentMethod": "Transferencia",
+        "paymentIcon": "bank",
+        "itemsSummary": "1x Webcam 4K Autofoco, 1x Aro de Luz LED 10\"",
+        "amount": "$214.75"
+      },
+      {
+        "id": "VEN-2023-083",
+        "date": "2026-09-27",
+        "timeLabel": "27 Sep, 09:15",
+        "paymentMethod": "Tarjeta",
+        "paymentIcon": "creditCard",
+        "itemsSummary": "3x Mousepad XL Antideslizante",
+        "amount": "$59.97"
+      },
+      {
+        "id": "VEN-2023-082",
+        "date": "2026-08-30",
+        "timeLabel": "30 Ago, 17:25",
+        "paymentMethod": "Efectivo",
+        "paymentIcon": "banknote",
+        "itemsSummary": "1x Impresora 3D Compacta, 2x Bobina Filamento PLA",
+        "amount": "$432.00"
+      },
+      {
+        "id": "VEN-2023-081",
+        "date": "2026-08-18",
+        "timeLabel": "18 Ago, 10:00",
+        "paymentMethod": "Tarjeta de Crédito",
+        "paymentIcon": "creditCard",
+        "itemsSummary": "6x Cable HDMI 2.1 8K",
+        "amount": "$179.40"
+      }
+    ]
+  }
+}

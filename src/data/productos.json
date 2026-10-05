@@ -1,0 +1,104 @@
+{
+  "appName": "SimpleStock",
+  "action": {
+    "label": "Nuevo Producto",
+    "icon": "plus"
+  },
+  "search": {
+    "placeholder": "Buscar producto o código SKU..."
+  },
+  "view": {
+    "list": "Vista Lista",
+    "grid": "Vista Cuadrícula"
+  },
+  "summary": {
+    "title": "Artículos",
+    "caption": "Total en inventario"
+  },
+  "empty": {
+    "title": "No se encontraron productos",
+    "description": "Intenta ajustar los términos de búsqueda o el filtro de categoría seleccionado."
+  },
+  "categories": [
+    { "id": "all", "label": "Todos" },
+    { "id": "electronica", "label": "Electrónica" },
+    { "id": "audio", "label": "Audio" },
+    { "id": "gaming", "label": "Gaming" },
+    { "id": "accesorios", "label": "Accesorios" },
+    { "id": "redes", "label": "Redes" },
+    { "id": "almacenamiento", "label": "Almacenamiento" }
+  ],
+  "products": {
+    "detailHint": "Toca para ver detalle",
+    "editLabel": "Editar producto",
+    "deleteLabel": "Eliminar producto",
+    "stockTemplate": "{count} en stock",
+    "currency": "USD",
+    "items": [
+      {
+        "id": "p-001",
+        "name": "Auriculares Inalámbricos Pro X",
+        "sku": "SKU-AUD-901",
+        "category": "audio",
+        "price": "$89.00",
+        "stock": 45
+      },
+      {
+        "id": "p-002",
+        "name": "Teclado Mecánico RGB 60%",
+        "sku": "SKU-GAM-602",
+        "category": "gaming",
+        "price": "$120.00",
+        "stock": 4
+      },
+      {
+        "id": "p-003",
+        "name": "Mouse Gamer Óptico 16k",
+        "sku": "SKU-GAM-115",
+        "category": "gaming",
+        "price": "$54.50",
+        "stock": 28
+      },
+      {
+        "id": "p-004",
+        "name": "Monitor Curvo 27\" 144Hz",
+        "sku": "SKU-ELE-441",
+        "category": "electronica",
+        "price": "$289.00",
+        "stock": 12
+      },
+      {
+        "id": "p-005",
+        "name": "Cable USB-C Reforzado 2m",
+        "sku": "SKU-ACC-032",
+        "category": "accesorios",
+        "price": "$14.99",
+        "stock": 110
+      },
+      {
+        "id": "p-006",
+        "name": "Auriculares Studio Monitor",
+        "sku": "SKU-AUD-118",
+        "category": "audio",
+        "price": "$215.00",
+        "stock": 0
+      },
+      {
+        "id": "p-007",
+        "name": "Router Wi-Fi 6 Mesh",
+        "sku": "SKU-RED-207",
+        "category": "redes",
+        "price": "$149.90",
+        "stock": 7
+      },
+      {
+        "id": "p-008",
+        "name": "Disco SSD NVMe 2TB PCIe 4.0",
+        "sku": "SKU-alm-770",
+        "category": "almacenamiento",
+        "price": "$198.00",
+        "stock": 21
+      }
+    ]
+  }
+}
