@@ -1,4 +1,5 @@
-import { ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { router } from 'expo-router';
 
 import { AppHeader } from '@/components/app-header';
 import inicio from '@/data/inicio.json';
@@ -121,12 +122,20 @@ export default function HomeScreen() {
             >
               {activity.title.toUpperCase()}
             </Text>
-            <View className="flex-row items-center gap-0.5">
-              <Text className="text-sm text-primary" style={{ fontWeight: '500' }}>
-                {activity.linkLabel}
-              </Text>
-              <Text className="text-sm text-primary">›</Text>
-            </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={activity.linkLabel}
+              hitSlop={8}
+              onPress={() => router.push('/registros')}
+              style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+            >
+              <View className="flex-row items-center gap-0.5">
+                <Text className="text-sm text-primary" style={{ fontWeight: '500' }}>
+                  {activity.linkLabel}
+                </Text>
+                <Text className="text-sm text-primary">›</Text>
+              </View>
+            </Pressable>
           </View>
 
           <View className="overflow-hidden rounded-xl bg-surface-container">

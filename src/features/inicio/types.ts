@@ -12,6 +12,20 @@ export type IconName =
   | 'sliders';
 
 /**
+ * Single activity entry. Shared by Inicio and Registros de actividades, both of
+ * which render it through `ActivityRow`.
+ */
+export type ActivityItem = {
+  id: string;
+  icon: IconName;
+  tone: Tone;
+  title: string;
+  subtitle: string;
+  value: string;
+  time: string;
+};
+
+/**
  * Shape of `src/data/inicio.json`. The JSON import widens literals to `string`,
  * so the module is asserted against this contract at the import site.
  */
@@ -50,14 +64,6 @@ export type HomeData = {
   activity: {
     title: string;
     linkLabel: string;
-    items: {
-      id: string;
-      icon: IconName;
-      tone: Tone;
-      title: string;
-      subtitle: string;
-      value: string;
-      time: string;
-    }[];
+    items: ActivityItem[];
   };
 };

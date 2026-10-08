@@ -1,0 +1,225 @@
+{
+  "appName": "SimpleStock",
+  "summaryLabel": "registros",
+  "emptyLabel": "Sin actividades registradas",
+  "showMoreLabel": "Ver más",
+  "pageSize": 10,
+  "items": [
+    {
+      "id": "act-1042",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1042",
+      "subtitle": "Terminal TPV #1 • 2 artículos",
+      "value": "+$85.00",
+      "time": "Hace 15m"
+    },
+    {
+      "id": "act-lote-89",
+      "icon": "tray",
+      "tone": "success",
+      "title": "Surtido de Mercancía",
+      "subtitle": "+50u Auriculares Pro • Lote #89",
+      "value": "+50 un.",
+      "time": "Hace 1h"
+    },
+    {
+      "id": "act-teclado",
+      "icon": "plusCircle",
+      "tone": "primary",
+      "title": "Producto Creado",
+      "subtitle": "Teclado Mecánico RGB 60%",
+      "value": "Nuevo",
+      "time": "Hace 2h"
+    },
+    {
+      "id": "act-auditoria",
+      "icon": "sliders",
+      "tone": "muted",
+      "title": "Ajuste de Auditoría",
+      "subtitle": "Corrección de conteo físico • Pasillo B",
+      "value": "-1 un.",
+      "time": "Hace 3h"
+    },
+    {
+      "id": "act-1041",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1041",
+      "subtitle": "Pago Efectivo • 3 artículos",
+      "value": "+$145.20",
+      "time": "Hace 4h"
+    },
+    {
+      "id": "act-1040",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1040",
+      "subtitle": "Terminal TPV #2 • 1 artículo",
+      "value": "+$39.90",
+      "time": "Hace 5h"
+    },
+    {
+      "id": "act-lote-88",
+      "icon": "tray",
+      "tone": "success",
+      "title": "Surtido de Mercancía",
+      "subtitle": "+24u Monitor 27\" 144Hz • Lote #88",
+      "value": "+24 un.",
+      "time": "Hace 6h"
+    },
+    {
+      "id": "act-devolucion",
+      "icon": "sliders",
+      "tone": "muted",
+      "title": "Devolución registrada",
+      "subtitle": "Pedido #1032 • Fábrica defectuosa",
+      "value": "-1 un.",
+      "time": "Hace 7h"
+    },
+    {
+      "id": "act-1039",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1039",
+      "subtitle": "Transferencia • 5 artículos",
+      "value": "+$410.00",
+      "time": "Hace 8h"
+    },
+    {
+      "id": "act-mouse",
+      "icon": "plusCircle",
+      "tone": "primary",
+      "title": "Producto Creado",
+      "subtitle": "Mouse Óptico Ergonómico 4K",
+      "value": "Nuevo",
+      "time": "Hace 9h"
+    },
+    {
+      "id": "act-1038",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1038",
+      "subtitle": "Tarjeta Débito • 2 artículos",
+      "value": "+$72.50",
+      "time": "Hace 10h"
+    },
+    {
+      "id": "act-precio",
+      "icon": "sliders",
+      "tone": "muted",
+      "title": "Precio actualizado",
+      "subtitle": "Hub USB-C 8 en 1 • $42.00 → $38.50",
+      "value": "-$3.50",
+      "time": "Hace 11h"
+    },
+    {
+      "id": "act-lote-87",
+      "icon": "tray",
+      "tone": "success",
+      "title": "Surtido de Mercancía",
+      "subtitle": "+60u Cable USB-C • Lote #87",
+      "value": "+60 un.",
+      "time": "Hace 12h"
+    },
+    {
+      "id": "act-1037",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1037",
+      "subtitle": "Pago Efectivo • 4 artículos",
+      "value": "+$215.75",
+      "time": "Ayer"
+    },
+    {
+      "id": "act-cambio-sucursal",
+      "icon": "sliders",
+      "tone": "muted",
+      "title": "Movimiento entre sucursales",
+      "subtitle": "8u Teclado Mecánico • Central → Norte",
+      "value": "-8 un.",
+      "time": "Ayer"
+    },
+    {
+      "id": "act-1036",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1036",
+      "subtitle": "Terminal TPV #1 • 6 artículos",
+      "value": "+$528.30",
+      "time": "Ayer"
+    },
+    {
+      "id": "act-audifonos",
+      "icon": "plusCircle",
+      "tone": "primary",
+      "title": "Producto Creado",
+      "subtitle": "Auriculares Pro ANC",
+      "value": "Nuevo",
+      "time": "Ayer"
+    },
+    {
+      "id": "act-1035",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1035",
+      "subtitle": "Transferencia • 1 artículo",
+      "value": "+$199.00",
+      "time": "Hace 2d"
+    },
+    {
+      "id": "act-lote-86",
+      "icon": "tray",
+      "tone": "success",
+      "title": "Surtido de Mercancía",
+      "subtitle": "+40u Estuche Rígido • Lote #86",
+      "value": "+40 un.",
+      "time": "Hace 2d"
+    },
+    {
+      "id": "act-1034",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1034",
+      "subtitle": "Tarjeta Crédito • 3 artículos",
+      "value": "+$164.90",
+      "time": "Hace 3d"
+    },
+    {
+      "id": "act-stock-cero",
+      "icon": "sliders",
+      "tone": "muted",
+      "title": "Producto agotado",
+      "subtitle": "Cable USB-C 2m • Stock en 0",
+      "value": "0 un.",
+      "time": "Hace 3d"
+    },
+    {
+      "id": "act-1033",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1033",
+      "subtitle": "Pago Efectivo • 2 artículos",
+      "value": "+$57.60",
+      "time": "Hace 4d"
+    },
+    {
+      "id": "act-camara",
+      "icon": "plusCircle",
+      "tone": "primary",
+      "title": "Producto Creado",
+      "subtitle": "Webcam 4K 60fps",
+      "value": "Nuevo",
+      "time": "Hace 5d"
+    },
+    {
+      "id": "act-1032",
+      "icon": "scroll",
+      "tone": "primary",
+      "title": "Venta completada #1032",
+      "subtitle": "Terminal TPV #2 • 1 artículo",
+      "value": "+$29.99",
+      "time": "Hace 5d"
+    }
+  ]
+}
