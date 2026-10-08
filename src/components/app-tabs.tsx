@@ -9,7 +9,7 @@ import {
   type Icon,
 } from 'phosphor-react-native';
 
-import { useTheme } from '@/hooks/use-theme';
+import { useThemePreference } from '@/theme/theme-provider';
 
 const ICONS: Record<string, Icon> = {
   index: HouseIcon,
@@ -32,27 +32,27 @@ function TabIcon({ name, color, focused, size }: TabIconProps & { name: string }
 }
 
 export default function AppTabs() {
-  const theme = useTheme();
+  const { colors } = useThemePreference();
   const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: theme.primary,
-        tabBarInactiveTintColor: theme.textSecondary,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: [
           styles.bar,
           {
-            backgroundColor: theme.background,
-            borderTopColor: theme.border,
+            backgroundColor: colors.background,
+            borderTopColor: colors.border,
             paddingBottom: Math.max(insets.bottom, 8),
             height: 56 + Math.max(insets.bottom, 8),
           },
         ],
         tabBarLabelStyle: styles.label,
         tabBarItemStyle: styles.item,
-        sceneStyle: { backgroundColor: theme.background },
+        sceneStyle: { backgroundColor: colors.background },
       }}
     >
       <Tabs.Screen

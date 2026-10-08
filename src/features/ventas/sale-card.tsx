@@ -1,7 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ICONS, PAYMENT_ICONS, SURFACE } from '@/features/ventas/icon-map';
+import { ICONS, PAYMENT_ICONS } from '@/features/ventas/icon-map';
 import type { PaymentIcon } from '@/features/ventas/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type SaleCardProps = {
   id: string;
@@ -24,6 +25,7 @@ export function SaleCard({
   noteLabel,
   currency,
 }: SaleCardProps) {
+  const { colors } = useThemePreference();
   const PaymentIconComponent = PAYMENT_ICONS[paymentIcon];
 
   return (
@@ -32,16 +34,16 @@ export function SaleCard({
         <View className="flex-row items-center gap-2">
           <Text
             className="text-sm font-semibold"
-            style={{ color: SURFACE.primary, letterSpacing: -0.2 }}
+            style={{ color: colors.primary, letterSpacing: -0.2 }}
           >
             #{id}
           </Text>
 
           <View className="flex-row items-center gap-1 rounded-full bg-surface-container-high px-2 py-0.5">
-            <PaymentIconComponent size={11} color={SURFACE.onSurfaceVariant} />
+            <PaymentIconComponent size={11} color={colors.onSurfaceVariant} />
             <Text
               className="text-2xs"
-              style={{ color: SURFACE.onSurfaceVariant }}
+              style={{ color: colors.onSurfaceVariant }}
             >
               {paymentMethod}
             </Text>
@@ -50,7 +52,7 @@ export function SaleCard({
 
         <Text
           className="text-sm"
-          style={{ color: SURFACE.onSurfaceVariant }}
+          style={{ color: colors.onSurfaceVariant }}
         >
           {timeLabel}
         </Text>
@@ -67,13 +69,13 @@ export function SaleCard({
         <View className="flex-row items-baseline gap-1">
           <Text
             className="text-base font-bold"
-            style={{ color: SURFACE.success, letterSpacing: -0.2 }}
+            style={{ color: colors.success, letterSpacing: -0.2 }}
           >
             {amount}
           </Text>
           <Text
             className="text-2xs"
-            style={{ color: SURFACE.onSurfaceVariant }}
+            style={{ color: colors.onSurfaceVariant }}
           >
             {currency}
           </Text>
@@ -87,11 +89,11 @@ export function SaleCard({
         >
           <Text
             className="text-sm font-medium"
-            style={{ color: SURFACE.onSurfaceVariant }}
+            style={{ color: colors.onSurfaceVariant }}
           >
             {noteLabel}
           </Text>
-          <ICONS.caretRight size={15} color={SURFACE.onSurfaceVariant} weight="bold" />
+          <ICONS.caretRight size={15} color={colors.onSurfaceVariant} weight="bold" />
         </Pressable>
       </View>
     </View>

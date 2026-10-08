@@ -28,12 +28,3 @@ export const PAYMENT_ICONS: Record<PaymentIcon, Icon> = {
   bank: BankIcon,
   banknote: HandCoinsIcon,
 };
-
-/** Hex tokens mirroring `tailwind.config.js` (phosphor needs a real color value). */
-export const SURFACE = {
-  onPrimary: '#09090b',
-  onSurface: '#fafafa',
-  onSurfaceVariant: '#a1a1aa',
-  primary: '#a78bfa',
-  success: '#34d399',
-} as const;

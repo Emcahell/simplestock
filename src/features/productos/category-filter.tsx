@@ -1,6 +1,6 @@
 import { Pressable, ScrollView, Text } from 'react-native';
 
-import { SURFACE } from '@/features/productos/icon-map';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type CategoryFilterProps = {
   categories: { id: string; label: string }[];
@@ -13,6 +13,7 @@ export function CategoryFilter({
   selected,
   onSelect,
 }: CategoryFilterProps) {
+  const { colors } = useThemePreference();
   return (
     <ScrollView
       horizontal
@@ -37,7 +38,7 @@ export function CategoryFilter({
             <Text
               className="text-sm font-medium"
               style={{
-                color: active ? SURFACE.onPrimary : SURFACE.onSurfaceVariant,
+                color: active ? colors.onPrimary : colors.onSurfaceVariant,
               }}
             >
               {category.label}

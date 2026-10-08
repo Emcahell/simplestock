@@ -24,13 +24,3 @@ export const ICONS = {
   grid: SquaresFourIcon,
   package: PackageIcon,
 } satisfies Record<string, Icon>;
-
-/** Hex tokens mirroring `tailwind.config.js` (phosphor needs a real color value). */
-export const SURFACE = {
-  onPrimary: '#09090b',
-  onSurface: '#fafafa',
-  onSurfaceVariant: '#a1a1aa',
-  primary: '#a78bfa',
-  success: '#34d399',
-  danger: '#ef4444',
-} as const;

@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native';
 
-import { ICONS, SURFACE } from '@/features/surtidos/icon-map';
+import { ICONS } from '@/features/surtidos/icon-map';
 import type { SurtidosData } from '@/features/surtidos/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type RestockCardProps = {
   restock: SurtidosData['restocks'][number];
@@ -9,13 +10,14 @@ type RestockCardProps = {
 };
 
 export function RestockCard({ restock, resultingStockLabel }: RestockCardProps) {
+  const { colors } = useThemePreference();
   return (
     <View className="gap-3 rounded-xl bg-surface-container p-3.5">
       <View className="flex-row items-center gap-1.5">
-        <ICONS.schedule size={14} color={SURFACE.onSurfaceVariant} weight="bold" />
+        <ICONS.schedule size={14} color={colors.onSurfaceVariant} weight="bold" />
         <Text
           className="text-sm"
-          style={{ color: SURFACE.onSurfaceVariant }}
+          style={{ color: colors.onSurfaceVariant }}
         >
           {restock.dateLabel}
         </Text>
@@ -27,7 +29,7 @@ export function RestockCard({ restock, resultingStockLabel }: RestockCardProps) 
           accessibilityElementsHidden
           importantForAccessibility="no-hide-descendants"
         >
-          <ICONS.inventory size={26} color={SURFACE.onSurfaceVariant} weight="bold" />
+          <ICONS.inventory size={26} color={colors.onSurfaceVariant} weight="bold" />
         </View>
 
         <View className="min-w-0 flex-1 gap-0.5">
@@ -35,17 +37,17 @@ export function RestockCard({ restock, resultingStockLabel }: RestockCardProps) 
             <Text
               numberOfLines={1}
               className="shrink text-base font-semibold"
-              style={{ color: SURFACE.onSurface }}
+              style={{ color: colors.onSurface }}
             >
               {restock.productName}
             </Text>
             <View
               className="shrink-0 rounded-md px-2 py-0.5"
-              style={{ backgroundColor: SURFACE.tertiaryContainer }}
+              style={{ backgroundColor: colors.tertiaryContainer }}
             >
               <Text
                 className="text-sm font-bold"
-                style={{ color: SURFACE.tertiary }}
+                style={{ color: colors.tertiary }}
               >
                 {restock.quantityLabel}
               </Text>
@@ -54,7 +56,7 @@ export function RestockCard({ restock, resultingStockLabel }: RestockCardProps) 
           <Text
             numberOfLines={1}
             className="text-sm"
-            style={{ color: SURFACE.onSurfaceVariant }}
+            style={{ color: colors.onSurfaceVariant }}
           >
             {restock.referenceLabel}
           </Text>
@@ -63,10 +65,10 @@ export function RestockCard({ restock, resultingStockLabel }: RestockCardProps) 
 
       <View className="flex-row items-center justify-between rounded-lg bg-surface-container-low px-2.5 py-1.5">
         <View className="flex-row items-center gap-1.5">
-          <ICONS.inventory size={15} color={SURFACE.secondary} weight="bold" />
+          <ICONS.inventory size={15} color={colors.secondary} weight="bold" />
           <Text
             className="text-sm"
-            style={{ color: SURFACE.onSurfaceVariant }}
+            style={{ color: colors.onSurfaceVariant }}
           >
             {resultingStockLabel}
           </Text>
@@ -74,7 +76,7 @@ export function RestockCard({ restock, resultingStockLabel }: RestockCardProps) 
         <Text
           numberOfLines={1}
           className="shrink text-sm font-bold"
-          style={{ color: SURFACE.onSurface }}
+          style={{ color: colors.onSurface }}
         >
           {restock.stockLabel}
         </Text>

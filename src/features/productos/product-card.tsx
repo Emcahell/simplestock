@@ -1,7 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ICONS, SURFACE } from '@/features/productos/icon-map';
+import { ICONS } from '@/features/productos/icon-map';
 import type { ViewMode } from '@/features/productos/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type ProductCardProps = {
   mode: ViewMode;
@@ -32,6 +33,7 @@ export function ProductCard({
   deleteLabel,
   onPress,
 }: ProductCardProps) {
+  const { colors } = useThemePreference();
   const isGrid = mode === 'grid';
   const hasStock = stock > 0;
 
@@ -45,7 +47,7 @@ export function ProductCard({
       {price}{' '}
       <Text
         className="text-2xs font-normal"
-        style={{ color: SURFACE.onSurfaceVariant }}
+        style={{ color: colors.onSurfaceVariant }}
       >
         {currency}
       </Text>
@@ -57,11 +59,11 @@ export function ProductCard({
     <View className="flex-row items-center gap-1.5">
       <View
         className="h-1.5 w-1.5 rounded-full"
-        style={{ backgroundColor: SURFACE.success }}
+        style={{ backgroundColor: colors.success }}
       />
       <Text
         className="text-sm font-medium"
-        style={{ color: SURFACE.success }}
+        style={{ color: colors.success }}
       >
         {stockText}
       </Text>
@@ -78,7 +80,7 @@ export function ProductCard({
     >
       <ICONS.package
         size={isGrid ? 26 : 24}
-        color={SURFACE.onSurfaceVariant}
+        color={colors.onSurfaceVariant}
         weight="duotone"
       />
     </View>
@@ -96,7 +98,7 @@ export function ProductCard({
       {isGrid ? null : (
         <ICONS.caretRight
           size={16}
-          color={SURFACE.onSurfaceVariant}
+          color={colors.onSurfaceVariant}
           weight="bold"
         />
       )}
@@ -121,7 +123,7 @@ export function ProductCard({
         className="rounded-md p-1.5"
         style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
       >
-        <ICONS.edit size={18} color={SURFACE.onSurfaceVariant} />
+        <ICONS.edit size={18} color={colors.onSurfaceVariant} />
       </Pressable>
       <Pressable
         accessibilityRole="button"
@@ -129,7 +131,7 @@ export function ProductCard({
         className="rounded-md p-1.5"
         style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
       >
-        <ICONS.delete size={18} color={SURFACE.onSurfaceVariant} />
+        <ICONS.delete size={18} color={colors.onSurfaceVariant} />
       </Pressable>
     </View>
   );
@@ -175,10 +177,10 @@ export function ProductCard({
 
           <View className="flex-row items-center justify-between rounded-lg bg-surface-container-low px-2.5 py-1.5">
             <View className="flex-row items-center gap-1">
-              <ICONS.detailHint size={13} color={SURFACE.onSurfaceVariant} />
+              <ICONS.detailHint size={13} color={colors.onSurfaceVariant} />
               <Text
                 className="text-sm"
-                style={{ color: SURFACE.onSurfaceVariant }}
+                style={{ color: colors.onSurfaceVariant }}
               >
                 {detailHint}
               </Text>

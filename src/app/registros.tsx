@@ -60,7 +60,7 @@ export default function RegistrosScreen() {
           accessibilityLabel={data.showMoreLabel}
           accessibilityState={{ expanded: false }}
           onPress={() => setVisible((current) => current + data.pageSize)}
-          className="mt-4 w-full items-center justify-center rounded-xl border border-primary/40 bg-surface-container py-3"
+          className="mt-4 w-full items-center justify-center rounded-xl border border-primary-outline bg-surface-container py-3"
           style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
         >
           <Text className="text-sm font-semibold text-primary">

@@ -1,8 +1,10 @@
 import { Image } from 'expo-image';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { MoonIcon, SunIcon } from 'phosphor-react-native';
 
 import logo from '@/assets/simplestock-logo.png';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type AppHeaderProps = {
   moduleName: string;
@@ -10,10 +12,14 @@ type AppHeaderProps = {
 };
 
 /**
- * Fixed header shared by every screen: brand logo, app name and current module.
+ * Fixed header shared by every screen: brand logo, app name, current module
+ * and the light/dark toggle.
  */
 export function AppHeader({ moduleName, appName = 'SimpleStock' }: AppHeaderProps) {
   const insets = useSafeAreaInsets();
+  const { resolved, colors, toggleTheme } = useThemePreference();
+  const ThemeToggleIcon = resolved === 'dark' ? SunIcon : MoonIcon;
+  const isDark = resolved === 'dark';
 
   return (
     <View className="w-full bg-surface" style={{ paddingTop: insets.top }}>
@@ -43,6 +49,18 @@ export function AppHeader({ moduleName, appName = 'SimpleStock' }: AppHeaderProp
             {moduleName}
           </Text>
         </View>
+
+        <Pressable
+          onPress={toggleTheme}
+          accessibilityRole="button"
+          accessibilityLabel={isDark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+          hitSlop={8}
+          style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+        >
+          <View className="h-9 w-9 items-center justify-center rounded-full bg-surface-container-high">
+            <ThemeToggleIcon size={18} color={colors.onSurfaceVariant} weight="regular" />
+          </View>
+        </Pressable>
       </View>
     </View>
   );

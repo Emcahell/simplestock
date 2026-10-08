@@ -1,7 +1,8 @@
 import { Modal, Pressable, Text, View } from 'react-native';
 
-import { ICONS, SURFACE } from '@/features/surtidos/icon-map';
+import { ICONS } from '@/features/surtidos/icon-map';
 import type { Period, SurtidosData } from '@/features/surtidos/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type MonthFilterProps = {
   data: SurtidosData['filter'];
@@ -24,6 +25,7 @@ export function MonthFilter({
   onClose,
   onSelect,
 }: MonthFilterProps) {
+  const { colors } = useThemePreference();
   const selected = periods.find((period) => period.id === value) ?? periods[0];
   const displayLabel = `${selected.label} (${selected.count})`;
 
@@ -38,26 +40,26 @@ export function MonthFilter({
           className="min-w-0 flex-1 flex-row items-center gap-2 rounded-lg bg-surface-container px-3 py-2"
           style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
         >
-          <ICONS.calendar size={18} color={SURFACE.primary} weight="bold" />
+          <ICONS.calendar size={18} color={colors.primary} weight="bold" />
           <Text
             numberOfLines={1}
             className="min-w-0 flex-1 text-sm font-medium"
-            style={{ color: SURFACE.onSurface }}
+            style={{ color: colors.onSurface }}
           >
             {displayLabel}
           </Text>
-          <ICONS.caretDown size={16} color={SURFACE.onSurfaceVariant} weight="bold" />
+          <ICONS.caretDown size={16} color={colors.onSurfaceVariant} weight="bold" />
         </Pressable>
 
         <View className="flex-row items-center gap-1.5 rounded-lg bg-surface-container px-3 py-2">
           <View
             className="h-2 w-2 rounded-full"
-            style={{ backgroundColor: SURFACE.tertiary }}
+            style={{ backgroundColor: colors.tertiary }}
           />
           <Text
             numberOfLines={1}
             className="text-sm font-semibold"
-            style={{ color: SURFACE.tertiary }}
+            style={{ color: colors.tertiary }}
           >
             {count} {data.movementsLabel.toUpperCase()}
           </Text>
@@ -100,15 +102,15 @@ export function MonthFilter({
                   className="flex-row items-center justify-between rounded-lg px-3 py-2.5"
                   style={({ pressed }) => ({
                     opacity: pressed ? 0.8 : 1,
-                    backgroundColor: isSelected ? SURFACE.tertiaryContainer : 'transparent',
+                    backgroundColor: isSelected ? colors.tertiaryContainer : 'transparent',
                   })}
                 >
                   <Text
                     className="text-sm font-medium"
                     style={{
                       color: isSelected
-                        ? SURFACE.tertiary
-                        : SURFACE.onSurfaceVariant,
+                        ? colors.tertiary
+                        : colors.onSurfaceVariant,
                     }}
                   >
                     {period.label}
@@ -117,8 +119,8 @@ export function MonthFilter({
                     className="text-sm font-semibold"
                     style={{
                       color: isSelected
-                        ? SURFACE.tertiary
-                        : SURFACE.onSurfaceVariant,
+                        ? colors.tertiary
+                        : colors.onSurfaceVariant,
                     }}
                   >
                     ({period.count})
@@ -136,7 +138,7 @@ export function MonthFilter({
             >
               <Text
                 className="text-sm font-semibold"
-                style={{ color: SURFACE.onSurfaceVariant }}
+                style={{ color: colors.onSurfaceVariant }}
               >
                 {data.cancelLabel}
               </Text>

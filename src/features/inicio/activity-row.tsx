@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native';
 
-import { ICONS, TONE_COLOR, TONE_VALUE_STYLE } from '@/features/inicio/icon-map';
+import { ICONS } from '@/features/inicio/icon-map';
 import type { IconName, Tone } from '@/features/inicio/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type ActivityRowProps = {
   icon: IconName;
@@ -20,14 +21,15 @@ export function ActivityRow({
   value,
   time,
 }: ActivityRowProps) {
+  const { colors } = useThemePreference();
   const IconComponent = ICONS[icon];
-  const valueStyle = TONE_VALUE_STYLE[tone];
+  const valueStyle = colors.toneValueStyle[tone];
 
   return (
     <View className="flex-row items-center justify-between gap-3 p-3.5">
       <View className="min-w-0 flex-1 flex-row items-center gap-3">
         <View className="h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-surface-container-high">
-          <IconComponent size={18} color={TONE_COLOR[tone]} />
+          <IconComponent size={18} color={colors.toneColor[tone]} />
         </View>
 
         <View className="min-w-0 flex-1">
