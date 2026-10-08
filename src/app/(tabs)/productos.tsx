@@ -13,10 +13,11 @@ import { AppHeader } from '@/components/app-header';
 import { PrimaryActionButton } from '@/components/primary-action-button';
 import productosData from '@/data/productos.json';
 import { CategoryFilter } from '@/features/productos/category-filter';
-import { ICONS, SURFACE } from '@/features/productos/icon-map';
+import { ICONS } from '@/features/productos/icon-map';
 import { ProductCard } from '@/features/productos/product-card';
 import type { ProductosData, ViewMode } from '@/features/productos/types';
 import { ViewSwitcher } from '@/features/productos/view-switcher';
+import { useThemePreference } from '@/theme/theme-provider';
 
 const MODULE_NAME = 'Productos';
 
@@ -25,6 +26,7 @@ const data = productosData as ProductosData;
 const WEB_INPUT_NO_OUTLINE = { outlineStyle: 'none' } as unknown as TextStyle;
 
 export default function ProductosScreen() {
+  const { colors } = useThemePreference();
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<ViewMode>('list');
@@ -70,13 +72,13 @@ export default function ProductosScreen() {
               className="w-full flex-row items-center rounded-xl bg-surface-container pl-3.5 pr-3"
               style={{ height: 44 }}
             >
-              <ICONS.search size={20} color={SURFACE.onSurfaceVariant} />
+              <ICONS.search size={20} color={colors.onSurfaceVariant} />
 
               <TextInput
                 value={query}
                 onChangeText={setQuery}
                 placeholder={data.search.placeholder}
-                placeholderTextColor={SURFACE.onSurfaceVariant}
+                placeholderTextColor={colors.onSurfaceVariant}
                 className="h-full flex-1 px-2.5 text-base text-on-surface"
                 style={Platform.OS === 'web' ? WEB_INPUT_NO_OUTLINE : undefined}
                 autoCorrect={false}
@@ -91,7 +93,7 @@ export default function ProductosScreen() {
                   accessibilityLabel="Limpiar búsqueda"
                   hitSlop={8}
                 >
-                  <ICONS.clear size={18} color={SURFACE.onSurfaceVariant} />
+                  <ICONS.clear size={18} color={colors.onSurfaceVariant} />
                 </Pressable>
               ) : null}
             </View>
@@ -132,7 +134,7 @@ export default function ProductosScreen() {
 
             <Text
               className="text-sm font-medium"
-              style={{ color: SURFACE.onSurfaceVariant }}
+              style={{ color: colors.onSurfaceVariant }}
             >
               {data.summary.caption}
             </Text>
@@ -174,7 +176,7 @@ export default function ProductosScreen() {
               <View className="mb-3 h-12 w-12 items-center justify-center rounded-full bg-surface-container">
                 <ICONS.package
                   size={24}
-                  color={SURFACE.onSurfaceVariant}
+                  color={colors.onSurfaceVariant}
                   weight="duotone"
                 />
               </View>

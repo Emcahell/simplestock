@@ -1,7 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ICONS, SURFACE } from '@/features/ventas/icon-map';
+import { ICONS } from '@/features/ventas/icon-map';
 import type { PeriodSelection, VentasData } from '@/features/ventas/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type PeriodFilterProps = {
   data: VentasData['filter'];
@@ -32,7 +33,8 @@ function Chip({
   caretUp?: boolean;
   accessibilityLabel: string;
 }) {
-  const tint = active ? SURFACE.onPrimary : SURFACE.onSurfaceVariant;
+  const { colors } = useThemePreference();
+  const tint = active ? colors.onPrimary : colors.onSurfaceVariant;
   const Caret = caretUp ? ICONS.caretUp : ICONS.caretDown;
 
   return (
@@ -67,6 +69,7 @@ export function PeriodFilter({
   onApply,
   onCancel,
 }: PeriodFilterProps) {
+  const { colors } = useThemePreference();
   const selectedMonth = value === 'all' ? null : value;
   const monthChipLabel =
     selectedMonth === null ? data.month.label : monthNames[selectedMonth];
@@ -118,7 +121,7 @@ export function PeriodFilter({
                   <Text
                     numberOfLines={1}
                     className="text-sm font-medium"
-                    style={{ color: selected ? SURFACE.onPrimary : SURFACE.onSurface }}
+                    style={{ color: selected ? colors.onPrimary : colors.onSurface }}
                   >
                     {name}
                   </Text>
@@ -126,7 +129,7 @@ export function PeriodFilter({
                     <Text
                       className="text-2xs font-medium"
                       style={{
-                        color: selected ? SURFACE.onPrimary : SURFACE.onSurfaceVariant,
+                        color: selected ? colors.onPrimary : colors.onSurfaceVariant,
                       }}
                     >
                       Actual
@@ -147,7 +150,7 @@ export function PeriodFilter({
             >
               <Text
                 className="text-sm font-medium"
-                style={{ color: SURFACE.onSurfaceVariant }}
+                style={{ color: colors.onSurfaceVariant }}
               >
                 {data.cancelLabel}
               </Text>
@@ -162,7 +165,7 @@ export function PeriodFilter({
             >
               <Text
                 className="text-sm font-semibold"
-                style={{ color: SURFACE.onPrimary }}
+                style={{ color: colors.onPrimary }}
               >
                 {data.applyLabel}
               </Text>

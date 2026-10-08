@@ -1,7 +1,8 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ICONS, TONE_COLOR } from '@/features/inicio/icon-map';
+import { ICONS } from '@/features/inicio/icon-map';
 import type { IconName, QuickActionVariant, Tone } from '@/features/inicio/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type QuickActionProps = {
   label: string;
@@ -11,9 +12,6 @@ type QuickActionProps = {
   onPress?: () => void;
 };
 
-const ON_PRIMARY = '#09090b';
-const ON_SURFACE = '#fafafa';
-
 export function QuickAction({
   label,
   icon,
@@ -21,6 +19,7 @@ export function QuickAction({
   variant,
   onPress,
 }: QuickActionProps) {
+  const { colors } = useThemePreference();
   const IconComponent = ICONS[icon];
   const isPrimary = variant === 'primary';
 
@@ -39,13 +38,13 @@ export function QuickAction({
     >
       <View
         className={`h-9 w-9 items-center justify-center rounded-lg ${
-          isPrimary ? 'bg-on-primary/10' : 'bg-surface-container-high'
+          isPrimary ? 'bg-primary-soft' : 'bg-surface-container-high'
         }`}
       >
         <IconComponent
           size={20}
           weight={isPrimary ? 'fill' : 'regular'}
-          color={isPrimary ? ON_PRIMARY : TONE_COLOR[tone]}
+          color={isPrimary ? colors.onPrimary : colors.toneColor[tone]}
         />
       </View>
 
@@ -53,7 +52,7 @@ export function QuickAction({
         className="text-center text-sm font-semibold"
         style={{
           letterSpacing: -0.2,
-          color: isPrimary ? ON_PRIMARY : ON_SURFACE,
+          color: isPrimary ? colors.onPrimary : colors.onSurface,
         }}
       >
         {label}

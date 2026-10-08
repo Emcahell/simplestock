@@ -1,6 +1,8 @@
 import { Pressable, Text } from 'react-native';
 import { PlusIcon } from 'phosphor-react-native';
 
+import { useThemePreference } from '@/theme/theme-provider';
+
 type PrimaryActionButtonProps = {
   label: string;
   onPress?: () => void;
@@ -11,6 +13,8 @@ type PrimaryActionButtonProps = {
  * the exact same PlusIcon (size and weight included) across screens.
  */
 export function PrimaryActionButton({ label, onPress }: PrimaryActionButtonProps) {
+  const { colors } = useThemePreference();
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -22,8 +26,8 @@ export function PrimaryActionButton({ label, onPress }: PrimaryActionButtonProps
         { transform: [{ scale: pressed ? 0.98 : 1 }] },
       ]}
     >
-      <PlusIcon size={20} color="#0a0012" weight="bold" />
-      <Text className="text-base font-semibold" style={{ color: '#0a0012' }}>
+      <PlusIcon size={20} color={colors.onPrimary} weight="bold" />
+      <Text className="text-base font-semibold" style={{ color: colors.onPrimary }}>
         {label}
       </Text>
     </Pressable>

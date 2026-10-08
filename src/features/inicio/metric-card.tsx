@@ -1,7 +1,8 @@
 import { Text, View } from 'react-native';
 
-import { ICONS, TONE_COLOR } from '@/features/inicio/icon-map';
+import { ICONS } from '@/features/inicio/icon-map';
 import type { IconName, Tone } from '@/features/inicio/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type MetricCardProps = {
   label: string;
@@ -18,6 +19,7 @@ export function MetricCard({
   glowTone,
   children,
 }: MetricCardProps) {
+  const { colors } = useThemePreference();
   const IconComponent = ICONS[icon];
 
   return (
@@ -31,7 +33,7 @@ export function MetricCard({
           height: 64,
           width: 64,
           borderRadius: 32,
-          backgroundColor: TONE_COLOR[glowTone],
+          backgroundColor: colors.toneColor[glowTone],
           opacity: 0.05,
         }}
       />
@@ -44,7 +46,7 @@ export function MetricCard({
           {label.toUpperCase()}
         </Text>
         <View className="h-7 w-7 items-center justify-center rounded-lg bg-surface-container-high">
-          <IconComponent size={18} color={TONE_COLOR[iconTone]} />
+          <IconComponent size={18} color={colors.toneColor[iconTone]} />
         </View>
       </View>
 

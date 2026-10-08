@@ -4,17 +4,18 @@ import { ScrollView, Text, View } from 'react-native';
 import { AppHeader } from '@/components/app-header';
 import { PrimaryActionButton } from '@/components/primary-action-button';
 import ventasData from '@/data/ventas.json';
-import { SURFACE } from '@/features/ventas/icon-map';
 import { PeriodFilter } from '@/features/ventas/period-filter';
 import { SaleCard } from '@/features/ventas/sale-card';
 import { TotalCard } from '@/features/ventas/total-card';
 import type { PeriodSelection, VentasData } from '@/features/ventas/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 const MODULE_NAME = 'Ventas';
 
 const data = ventasData as VentasData;
 
 export default function VentasScreen() {
+  const { colors } = useThemePreference();
   const now = useMemo(() => new Date(), []);
   const currentMonth = now.getMonth();
 
@@ -106,7 +107,7 @@ export default function VentasScreen() {
                 <View className="rounded-full bg-surface-container-high px-1.5 py-0.5">
                   <Text
                     className="text-2xs font-bold"
-                    style={{ color: SURFACE.onSurfaceVariant }}
+                    style={{ color: colors.onSurfaceVariant }}
                   >
                     {totals.count}
                   </Text>
@@ -132,7 +133,7 @@ export default function VentasScreen() {
               <View className="w-full items-center rounded-xl bg-surface-container px-4 py-8">
                 <Text
                   className="text-sm"
-                  style={{ color: SURFACE.onSurfaceVariant }}
+                  style={{ color: colors.onSurfaceVariant }}
                 >
                   Sin transacciones para el periodo seleccionado
                 </Text>

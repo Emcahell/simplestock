@@ -1,6 +1,7 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ICONS, SURFACE } from '@/features/ventas/icon-map';
+import { ICONS } from '@/features/ventas/icon-map';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type TotalCardProps = {
   label: string;
@@ -17,6 +18,7 @@ export function TotalCard({
   expanded,
   onToggle,
 }: TotalCardProps) {
+  const { colors } = useThemePreference();
   const Caret = expanded ? ICONS.caretUp : ICONS.caretDown;
 
   return (
@@ -30,7 +32,7 @@ export function TotalCard({
           height: 96,
           width: 96,
           borderRadius: 48,
-          backgroundColor: SURFACE.primary,
+          backgroundColor: colors.primary,
           opacity: 0.1,
         }}
       />
@@ -54,7 +56,7 @@ export function TotalCard({
               </Text>
               <Text
                 className="text-sm font-medium"
-                style={{ color: SURFACE.success }}
+                style={{ color: colors.success }}
               >
                 {currency}
               </Text>
@@ -70,7 +72,7 @@ export function TotalCard({
           className="h-8 w-8 items-center justify-center rounded-full bg-surface-container-high"
           style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
         >
-          <Caret size={20} color={SURFACE.onSurfaceVariant} weight="bold" />
+          <Caret size={20} color={colors.onSurfaceVariant} weight="bold" />
         </Pressable>
       </View>
     </View>

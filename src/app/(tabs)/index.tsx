@@ -8,12 +8,14 @@ import { ICONS } from '@/features/inicio/icon-map';
 import { MetricCard } from '@/features/inicio/metric-card';
 import { QuickAction } from '@/features/inicio/quick-action';
 import type { HomeData } from '@/features/inicio/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 const MODULE_NAME = 'Inicio';
 
 const data = inicio as HomeData;
 
 export default function HomeScreen() {
+  const { colors } = useThemePreference();
   const { greeting, metrics, quickActions, activity } = data;
 
   return (
@@ -80,7 +82,7 @@ export default function HomeScreen() {
                 const FooterIcon = ICONS[metrics.sales.footerIcon];
                 return (
                   <>
-                    <FooterIcon size={14} color="#a1a1aa" />
+                    <FooterIcon size={14} color={colors.onSurfaceVariant} />
                     <Text className="text-sm text-on-surface-variant" style={{ fontWeight: '500' }}>
                       {metrics.sales.footerLabel}
                     </Text>

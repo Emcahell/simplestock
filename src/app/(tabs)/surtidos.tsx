@@ -4,16 +4,18 @@ import { ScrollView, Text, View } from 'react-native';
 import { AppHeader } from '@/components/app-header';
 import { PrimaryActionButton } from '@/components/primary-action-button';
 import surtidosData from '@/data/surtidos.json';
-import { ICONS, SURFACE } from '@/features/surtidos/icon-map';
+import { ICONS } from '@/features/surtidos/icon-map';
 import { MonthFilter } from '@/features/surtidos/month-filter';
 import { RestockCard } from '@/features/surtidos/restock-card';
 import type { SurtidosData } from '@/features/surtidos/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 const MODULE_NAME = 'Surtidos';
 
 const data = surtidosData as SurtidosData;
 
 export default function SurtidosScreen() {
+  const { colors } = useThemePreference();
   const [periodId, setPeriodId] = useState('all');
   const [pickerOpen, setPickerOpen] = useState(false);
 
@@ -61,7 +63,7 @@ export default function SurtidosScreen() {
           <View className="w-full gap-3 pt-1 pb-2">
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center gap-1.5">
-                <ICONS.history size={15} color={SURFACE.primary} weight="bold" />
+                <ICONS.history size={15} color={colors.primary} weight="bold" />
                 <Text
                   className="text-sm font-semibold text-on-surface-variant"
                   style={{ letterSpacing: 0.8 }}
@@ -71,7 +73,7 @@ export default function SurtidosScreen() {
               </View>
               <Text
                 className="text-sm text-on-surface-variant"
-                style={{ color: SURFACE.onSurfaceVariant }}
+                style={{ color: colors.onSurfaceVariant }}
               >
                 {visibleRestocks.length} de {selectedPeriod.count}{' '}
                 {data.history.shownSuffix}
@@ -88,7 +90,7 @@ export default function SurtidosScreen() {
 
             {visibleRestocks.length === 0 ? (
               <View className="w-full items-center rounded-xl bg-surface-container px-4 py-8">
-                <Text className="text-sm" style={{ color: SURFACE.onSurfaceVariant }}>
+                <Text className="text-sm" style={{ color: colors.onSurfaceVariant }}>
                   {data.history.emptyLabel}
                 </Text>
               </View>

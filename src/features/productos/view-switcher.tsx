@@ -1,7 +1,8 @@
 import { Pressable, View } from 'react-native';
 
-import { ICONS, SURFACE } from '@/features/productos/icon-map';
+import { ICONS } from '@/features/productos/icon-map';
 import type { ViewMode } from '@/features/productos/types';
+import { useThemePreference } from '@/theme/theme-provider';
 
 type ViewSwitcherProps = {
   mode: ViewMode;
@@ -10,6 +11,7 @@ type ViewSwitcherProps = {
 };
 
 export function ViewSwitcher({ mode, labels, onChange }: ViewSwitcherProps) {
+  const { colors } = useThemePreference();
   const options: { mode: ViewMode; label: string }[] = [
     { mode: 'list', label: labels.list },
     { mode: 'grid', label: labels.grid },
@@ -35,7 +37,7 @@ export function ViewSwitcher({ mode, labels, onChange }: ViewSwitcherProps) {
           >
             <IconComponent
               size={20}
-              color={active ? SURFACE.primary : SURFACE.onSurfaceVariant}
+              color={active ? colors.primary : colors.onSurfaceVariant}
               weight={active ? 'bold' : 'regular'}
             />
           </Pressable>
