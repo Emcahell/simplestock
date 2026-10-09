@@ -1,4 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
+import { Image } from 'expo-image';
 
 import { ICONS } from '@/features/productos/icon-map';
 import type { ViewMode } from '@/features/productos/types';
@@ -16,7 +17,10 @@ type ProductCardProps = {
   detailHint: string;
   editLabel: string;
   deleteLabel: string;
+  imageUri?: string | null;
   onPress?: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 };
 
 export function ProductCard({
@@ -31,7 +35,10 @@ export function ProductCard({
   detailHint,
   editLabel,
   deleteLabel,
+  imageUri,
   onPress,
+  onEdit,
+  onDelete,
 }: ProductCardProps) {
   const { colors } = useThemePreference();
   const isGrid = mode === 'grid';
@@ -78,11 +85,20 @@ export function ProductCard({
         height: isGrid ? 88 : 80,
       }}
     >
-      <ICONS.package
-        size={isGrid ? 26 : 24}
-        color={colors.onSurfaceVariant}
-        weight="duotone"
-      />
+      {imageUri ? (
+        <Image
+          source={{ uri: imageUri }}
+          style={{ width: '100%', height: '100%' }}
+          contentFit="cover"
+          transition={150}
+        />
+      ) : (
+        <ICONS.package
+          size={isGrid ? 26 : 24}
+          color={colors.onSurfaceVariant}
+          weight="duotone"
+        />
+      )}
     </View>
   );
 
@@ -122,6 +138,7 @@ export function ProductCard({
         accessibilityLabel={editLabel}
         className="rounded-md p-1.5"
         style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+        onPress={(e) => { e.stopPropagation(); onEdit?.(); }}
       >
         <ICONS.edit size={18} color={colors.onSurfaceVariant} />
       </Pressable>
@@ -130,6 +147,7 @@ export function ProductCard({
         accessibilityLabel={deleteLabel}
         className="rounded-md p-1.5"
         style={({ pressed }) => ({ opacity: pressed ? 0.6 : 1 })}
+        onPress={(e) => { e.stopPropagation(); onDelete?.(); }}
       >
         <ICONS.delete size={18} color={colors.onSurfaceVariant} />
       </Pressable>

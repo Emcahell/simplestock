@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Platform,
   Pressable,
@@ -6,23 +6,27 @@ import {
   Text,
   TextInput,
   View,
+  Alert,
   type TextStyle,
 } from 'react-native';
+import { router } from 'expo-router';
+import { Image } from 'expo-image';
+import { useFocusEffect } from 'expo-router';
 
 import { AppHeader } from '@/components/app-header';
 import { PrimaryActionButton } from '@/components/primary-action-button';
-import productosData from '@/data/productos.json';
 import { CategoryFilter } from '@/features/productos/category-filter';
 import { ICONS } from '@/features/productos/icon-map';
 import { ProductCard } from '@/features/productos/product-card';
-import type { ProductosData, ViewMode } from '@/features/productos/types';
+import type { ViewMode } from '@/features/productos/types';
 import { ViewSwitcher } from '@/features/productos/view-switcher';
 import { useThemePreference } from '@/theme/theme-provider';
+import { deleteProduct, listCategories, listProducts, type ProductWithCategory } from '@/db/products';
+import { getSetting, setSetting } from '@/db/settings';
+import { formatUSDPrice } from '@/utils/format';
 
 const MODULE_NAME = 'Productos';
-
-const data = productosData as ProductosData;
-
+const VIEW_MODE_KEY = 'productos_view_mode';
 const WEB_INPUT_NO_OUTLINE = { outlineStyle: 'none' } as unknown as TextStyle;
 
 export default function ProductosScreen() {
@@ -30,29 +34,60 @@ export default function ProductosScreen() {
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<ViewMode>('list');
+  const [products, setProducts] = useState<ProductWithCategory[]>([]);
+  const [categories, setCategories] = useState<{ id: string; label: string }[]>([]);
 
-  const categoryLabels = useMemo(
-    () => new Map(data.categories.map((entry) => [entry.id, entry.label])),
-    []
-  );
+  useEffect(() => {
+    let alive = true;
+    getSetting(VIEW_MODE_KEY).then((stored) => {
+      if (alive && (stored === 'list' || stored === 'grid')) {
+        setMode(stored);
+      }
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const changeMode = useCallback((next: ViewMode) => {
+    setMode(next);
+    void setSetting(VIEW_MODE_KEY, next);
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    void load();
+  }, [load]));
+
+  async function load() {
+    const [prods, cats] = await Promise.all([listProducts(), listCategories()]);
+    setProducts(prods);
+    setCategories([{ id: 'all', label: 'Todos' }, ...cats.map(c=>({ id: c.id, label: c.name }))]);
+  }
+
+  const categoryLabels = useMemo(() => new Map(categories.map(c=>[c.id, c.label])), [categories]);
 
   const visibleProducts = useMemo(() => {
     const term = query.trim().toLowerCase();
-
-    return data.products.items.filter((product) => {
-      const matchesCategory = category === 'all' || product.category === category;
+    return products.filter((product) => {
+      const matchesCategory = category === 'all' || product.category_id === category;
       const matchesSearch =
         term.length === 0 ||
         product.name.toLowerCase().includes(term) ||
-        product.sku.toLowerCase().includes(term);
-
+        (product.sku ?? '').toLowerCase().includes(term);
       return matchesCategory && matchesSearch;
     });
-  }, [category, query]);
+  }, [category, query, products]);
+
+  function eliminar(id: string) {
+    Alert.alert('Eliminar producto', '¿Estás seguro de eliminar este producto?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Eliminar', style: 'destructive', onPress: async () => { await deleteProduct(id); await load(); }}
+    ]);
+  }
 
   return (
     <View className="flex-1 bg-surface">
-      <AppHeader moduleName={MODULE_NAME} appName={data.appName} />
+      <AppHeader moduleName={MODULE_NAME} appName="SimpleStock" />
 
       <ScrollView
         className="flex-1"
@@ -63,7 +98,7 @@ export default function ProductosScreen() {
         <View className="gap-4">
           {/* Acción principal */}
           <View className="w-full pt-1">
-            <PrimaryActionButton label={data.action.label} />
+            <PrimaryActionButton label="Nuevo producto" onPress={() => router.push('/producto/nuevo')} />
           </View>
 
           {/* Búsqueda */}
@@ -77,13 +112,13 @@ export default function ProductosScreen() {
               <TextInput
                 value={query}
                 onChangeText={setQuery}
-                placeholder={data.search.placeholder}
+                placeholder="Buscar por nombre o SKU"
                 placeholderTextColor={colors.onSurfaceVariant}
                 className="h-full flex-1 px-2.5 text-base text-on-surface"
                 style={Platform.OS === 'web' ? WEB_INPUT_NO_OUTLINE : undefined}
                 autoCorrect={false}
                 returnKeyType="search"
-                accessibilityLabel={data.search.placeholder}
+                accessibilityLabel="Buscar por nombre o SKU"
               />
 
               {query.length > 0 ? (
@@ -102,15 +137,15 @@ export default function ProductosScreen() {
           {/* Categorías + cambio de vista */}
           <View className="w-full flex-row items-center gap-2">
             <CategoryFilter
-              categories={data.categories}
+              categories={categories}
               selected={category}
               onSelect={setCategory}
             />
             <View style={{ flexShrink: 0 }}>
               <ViewSwitcher
                 mode={mode}
-                labels={data.view}
-                onChange={setMode}
+                labels={{ list: 'Lista', grid: 'Cuadrícula' }}
+                onChange={changeMode}
               />
             </View>
           </View>
@@ -122,13 +157,13 @@ export default function ProductosScreen() {
                 className="text-sm font-semibold text-on-surface-variant"
                 style={{ letterSpacing: 0.8 }}
               >
-                {data.summary.title.toUpperCase()}
+                PRODUCTOS
               </Text>
               <Text
                 className="text-lg font-bold text-on-surface"
                 style={{ letterSpacing: -0.3 }}
               >
-                {visibleProducts.length}
+                {products.length}
               </Text>
             </View>
 
@@ -136,7 +171,7 @@ export default function ProductosScreen() {
               className="text-sm font-medium"
               style={{ color: colors.onSurfaceVariant }}
             >
-              {data.summary.caption}
+              Mostrando {visibleProducts.length}
             </Text>
           </View>
 
@@ -158,15 +193,19 @@ export default function ProductosScreen() {
                   <ProductCard
                     mode={mode}
                     name={product.name}
-                    sku={product.sku}
-                    categoryLabel={categoryLabels.get(product.category) ?? ''}
-                    price={product.price}
+                    sku={product.sku ?? ''}
+                    categoryLabel={categoryLabels.get(product.category_id ?? 'all') ?? (product.category_name ?? '')}
+                    price={formatUSDPrice(product.price)}
                     stock={product.stock}
-                    currency={data.products.currency}
-                    stockTemplate={data.products.stockTemplate}
-                    detailHint={data.products.detailHint}
-                    editLabel={data.products.editLabel}
-                    deleteLabel={data.products.deleteLabel}
+                    currency="USD"
+                    imageUri={product.image_uri}
+                    stockTemplate="{count} en stock"
+                    detailHint="Ver detalles"
+                    editLabel="Editar producto"
+                    deleteLabel="Eliminar producto"
+                    onPress={() => router.push({ pathname: '/producto/[id]', params: { id: product.id } })}
+                    onEdit={() => router.push({ pathname: '/producto/[id]/editar', params: { id: product.id } })}
+                    onDelete={() => eliminar(product.id)}
                   />
                 </View>
               ))}
@@ -181,13 +220,13 @@ export default function ProductosScreen() {
                 />
               </View>
               <Text className="text-base font-semibold text-on-surface">
-                {data.empty.title}
+                Sin productos aún
               </Text>
               <Text
                 className="mt-1 text-center text-sm text-on-surface-variant"
                 style={{ maxWidth: 220 }}
               >
-                {data.empty.description}
+                Agrega tu primer producto con el botón &quot;Nuevo producto&quot;
               </Text>
             </View>
           )}

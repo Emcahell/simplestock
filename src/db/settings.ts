@@ -1,7 +1,6 @@
 import { Platform } from 'react-native';
 
 import { getDatabase } from '@/db/index';
-import { migrate } from '@/db/migrate';
 
 /**
  * Settings repository on top of the SQLite `settings` table.
@@ -16,7 +15,6 @@ const WEB_STORAGE_PREFIX = 'simplestock:';
 
 async function readFromNative(key: string): Promise<string | null> {
   const db = await getDatabase();
-  await migrate(db);
   const row = await db.getFirstAsync<{ value: string }>(
     'SELECT value FROM settings WHERE key = ?',
     key
@@ -26,7 +24,6 @@ async function readFromNative(key: string): Promise<string | null> {
 
 async function writeToNative(key: string, value: string): Promise<void> {
   const db = await getDatabase();
-  await migrate(db);
   await db.runAsync(
     `INSERT INTO settings (key, value) VALUES (?, ?)
      ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
