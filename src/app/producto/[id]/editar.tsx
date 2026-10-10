@@ -1,10 +1,8 @@
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { router } from 'expo-router';
 import { Pressable, ScrollView, Text, TextInput, View, Platform, type TextStyle } from 'react-native';
 import { Image } from 'expo-image';
 
-import { AppHeader } from '@/components/app-header';
 import { useThemePreference } from '@/theme/theme-provider';
 import { createCategory, getProductById, listCategories, updateProduct } from '@/db/products';
 import { CategorySelect } from '@/features/productos/category-select';
@@ -29,30 +27,28 @@ export default function ProductoEditarScreen() {
   const [catModal, setCatModal] = useState(false);
   const [catName, setCatName] = useState('');
   const [saving, setSaving] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => { void init(); }, [id]);
-
-  async function init() {
-    await loadCategories();
-    if (id) await loadProduct(id as string);
-    setLoading(false);
-  }
-  async function loadCategories() {
-    const c = await listCategories();
-    setCategories(c);
-  }
-  async function loadProduct(pid: string) {
-    const p = await getProductById(pid);
-    if (p) {
-      setName(p.name);
-      setDescription(p.description);
-      setCategoryId(p.category_id);
-      setPriceDigits(valueToPriceDigits(p.price));
-      setImageUri(p.image_uri);
-      setSku(p.sku ?? '');
+  useEffect(() => {
+    let alive = true;
+    async function run() {
+      const c = await listCategories();
+      if (alive) setCategories(c);
+      if (id) {
+        const p = await getProductById(id as string);
+        if (alive && p) {
+          setName(p.name);
+          setDescription(p.description);
+          setCategoryId(p.category_id);
+          setPriceDigits(valueToPriceDigits(p.price));
+          setImageUri(p.image_uri);
+          setSku(p.sku ?? '');
+        }
+      }
     }
-  }
+    void run();
+    return () => { alive = false; };
+  }, [id]);
+
   function onPriceChange(t: string) {
     setPriceDigits((prev) => {
       const raw = toPriceDigits(t);
@@ -73,7 +69,7 @@ export default function ProductoEditarScreen() {
     const n = catName.trim();
     if (!n) return;
     const c = await createCategory(n);
-    await loadCategories();
+    setCategories(await listCategories());
     setCategoryId(c.id);
     setCatName('');
     setCatModal(false);
