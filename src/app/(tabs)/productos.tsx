@@ -9,9 +9,8 @@ import {
   Alert,
   type TextStyle,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router , useFocusEffect } from 'expo-router';
 import { Image } from 'expo-image';
-import { useFocusEffect } from 'expo-router';
 
 import { AppHeader } from '@/components/app-header';
 import { PrimaryActionButton } from '@/components/primary-action-button';
@@ -27,6 +26,7 @@ import { formatUSDPrice } from '@/utils/format';
 
 const MODULE_NAME = 'Productos';
 const VIEW_MODE_KEY = 'productos_view_mode';
+const PAGE_SIZE = 10;
 const WEB_INPUT_NO_OUTLINE = { outlineStyle: 'none' } as unknown as TextStyle;
 
 export default function ProductosScreen() {
@@ -34,6 +34,7 @@ export default function ProductosScreen() {
   const [category, setCategory] = useState('all');
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<ViewMode>('list');
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [products, setProducts] = useState<ProductWithCategory[]>([]);
   const [categories, setCategories] = useState<{ id: string; label: string }[]>([]);
 
@@ -48,6 +49,20 @@ export default function ProductosScreen() {
       alive = false;
     };
   }, []);
+
+  const resetPage = useCallback(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, []);
+
+  const selectCategory = useCallback((id: string) => {
+    setCategory(id);
+    resetPage();
+  }, [resetPage]);
+
+  const changeQuery = useCallback((text: string) => {
+    setQuery(text);
+    resetPage();
+  }, [resetPage]);
 
   const changeMode = useCallback((next: ViewMode) => {
     setMode(next);
@@ -77,6 +92,12 @@ export default function ProductosScreen() {
       return matchesCategory && matchesSearch;
     });
   }, [category, query, products]);
+
+  const shownProducts = useMemo(
+    () => visibleProducts.slice(0, visibleCount),
+    [visibleProducts, visibleCount]
+  );
+  const hasMore = visibleCount < visibleProducts.length;
 
   function eliminar(id: string) {
     Alert.alert('Eliminar producto', '¿Estás seguro de eliminar este producto?', [
@@ -111,7 +132,7 @@ export default function ProductosScreen() {
 
               <TextInput
                 value={query}
-                onChangeText={setQuery}
+                onChangeText={changeQuery}
                 placeholder="Buscar por nombre o SKU"
                 placeholderTextColor={colors.onSurfaceVariant}
                 className="h-full flex-1 px-2.5 text-base text-on-surface"
@@ -123,7 +144,7 @@ export default function ProductosScreen() {
 
               {query.length > 0 ? (
                 <Pressable
-                  onPress={() => setQuery('')}
+                  onPress={() => changeQuery('')}
                   accessibilityRole="button"
                   accessibilityLabel="Limpiar búsqueda"
                   hitSlop={8}
@@ -139,7 +160,7 @@ export default function ProductosScreen() {
             <CategoryFilter
               categories={categories}
               selected={category}
-              onSelect={setCategory}
+              onSelect={selectCategory}
             />
             <View style={{ flexShrink: 0 }}>
               <ViewSwitcher
@@ -171,7 +192,7 @@ export default function ProductosScreen() {
               className="text-sm font-medium"
               style={{ color: colors.onSurfaceVariant }}
             >
-              Mostrando {visibleProducts.length}
+              Mostrando {shownProducts.length} de {visibleProducts.length}
             </Text>
           </View>
 
@@ -185,7 +206,7 @@ export default function ProductosScreen() {
                 rowGap: 12,
               }}
             >
-              {visibleProducts.map((product) => (
+              {shownProducts.map((product) => (
                 <View
                   key={product.id}
                   style={{ width: mode === 'grid' ? '48%' : '100%' }}
@@ -230,6 +251,20 @@ export default function ProductosScreen() {
               </Text>
             </View>
           )}
+
+          {/* Carga incremental */}
+          {hasMore ? (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel="Ver más"
+              accessibilityState={{ expanded: false }}
+              onPress={() => setVisibleCount((current) => current + PAGE_SIZE)}
+              className="mt-4 w-full items-center justify-center rounded-xl border border-primary-outline bg-surface-container py-3"
+              style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+            >
+              <Text className="text-sm font-semibold text-primary">Ver más</Text>
+            </Pressable>
+          ) : null}
         </View>
       </ScrollView>
     </View>
