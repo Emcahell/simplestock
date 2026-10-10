@@ -10,7 +10,6 @@ import {
   type TextStyle,
 } from 'react-native';
 import { router , useFocusEffect } from 'expo-router';
-import { Image } from 'expo-image';
 
 import { AppHeader } from '@/components/app-header';
 import { PrimaryActionButton } from '@/components/primary-action-button';
@@ -69,15 +68,15 @@ export default function ProductosScreen() {
     void setSetting(VIEW_MODE_KEY, next);
   }, []);
 
-  useFocusEffect(useCallback(() => {
-    void load();
-  }, [load]));
-
-  async function load() {
+  const load = useCallback(async () => {
     const [prods, cats] = await Promise.all([listProducts(), listCategories()]);
     setProducts(prods);
     setCategories([{ id: 'all', label: 'Todos' }, ...cats.map(c=>({ id: c.id, label: c.name }))]);
-  }
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    void load();
+  }, [load]));
 
   const categoryLabels = useMemo(() => new Map(categories.map(c=>[c.id, c.label])), [categories]);
 

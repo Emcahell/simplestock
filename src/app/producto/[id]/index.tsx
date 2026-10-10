@@ -1,10 +1,8 @@
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { ScrollView, Text, View, Pressable, Alert } from 'react-native';
 import { Image } from 'expo-image';
 import { useCallback, useState } from 'react';
-import { useFocusEffect } from 'expo-router';
 
-import { AppHeader } from '@/components/app-header';
 import { useThemePreference } from '@/theme/theme-provider';
 import { deleteProduct, getProductById, type ProductWithCategory } from '@/db/products';
 import { formatUSDPrice } from '@/utils/format';
@@ -14,15 +12,12 @@ export default function ProductoDetalleScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useThemePreference();
   const [prod, setProd] = useState<ProductWithCategory | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useFocusEffect(useCallback(() => {
     async function run() {
       if (!id) return;
-      setLoading(true);
       const p = await getProductById(id as string);
       setProd(p);
-      setLoading(false);
     }
     void run();
   }, [id]));
