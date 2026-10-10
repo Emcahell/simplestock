@@ -2,7 +2,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 
 export type Migration = (db: SQLiteDatabase) => Promise<void>;
 
-const DATABASE_VERSION = 1;
+const DATABASE_VERSION = 2;
 
 const MIGRATIONS: Record<number, Migration> = {
   // v1: app settings (key/value). Future versions add products, sales, etc.
@@ -13,6 +13,30 @@ CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY NOT NULL,
   value TEXT NOT NULL
 );
+`);
+  },
+  2: async (db) => {
+    await db.execAsync(`
+CREATE TABLE IF NOT EXISTS categories (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS products (
+  id TEXT PRIMARY KEY NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  category_id TEXT,
+  price REAL NOT NULL,
+  image_uri TEXT,
+  stock INTEGER NOT NULL DEFAULT 0,
+  sku TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+);
+CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
+CREATE INDEX IF NOT EXISTS idx_products_name ON products(name COLLATE NOCASE);
 `);
   },
 };

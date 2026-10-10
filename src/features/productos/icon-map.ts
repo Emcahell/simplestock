@@ -1,5 +1,7 @@
 import {
+  CaretDownIcon,
   CaretRightIcon,
+  CheckIcon,
   HandTapIcon,
   ListIcon,
   MagnifyingGlassIcon,
@@ -16,7 +18,9 @@ export const ICONS = {
   plus: PlusIcon,
   search: MagnifyingGlassIcon,
   clear: XIcon,
+  caretDown: CaretDownIcon,
   caretRight: CaretRightIcon,
+  check: CheckIcon,
   detailHint: HandTapIcon,
   edit: PencilSimpleIcon,
   delete: TrashIcon,

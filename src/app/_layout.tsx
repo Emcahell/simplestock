@@ -77,6 +77,42 @@ function RootNavigator() {
               headerTitleAlign: 'center',
             }}
           />
+          <Stack.Screen
+            name="producto/nuevo"
+            options={{
+              title: 'Nuevo producto',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="producto/[id]/index"
+            options={{
+              title: 'Detalles del producto',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="producto/[id]/editar"
+            options={{
+              title: 'Editar producto',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
         </Stack>
       </NavigationThemeProvider>
     </>
