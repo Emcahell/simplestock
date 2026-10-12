@@ -220,6 +220,7 @@ export default function ProductosScreen() {
                     currency="USD"
                     imageUri={product.image_uri}
                     stockTemplate="{count} en stock"
+                    outOfStockLabel="No hay productos disponibles"
                     detailHint="Ver detalles"
                     editLabel="Editar producto"
                     deleteLabel="Eliminar producto"

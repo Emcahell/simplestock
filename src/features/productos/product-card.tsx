@@ -14,6 +14,7 @@ type ProductCardProps = {
   stock: number;
   currency: string;
   stockTemplate: string;
+  outOfStockLabel: string;
   detailHint: string;
   editLabel: string;
   deleteLabel: string;
@@ -32,6 +33,7 @@ export function ProductCard({
   stock,
   currency,
   stockTemplate,
+  outOfStockLabel,
   detailHint,
   editLabel,
   deleteLabel,
@@ -61,21 +63,21 @@ export function ProductCard({
     </Text>
   );
 
-  // El stock solo se muestra cuando hay existencias.
-  const stockBlock = hasStock ? (
+  // Muestra el stock cuando hay existencias y avisa cuando el producto no está disponible.
+  const stockBlock = (
     <View className="flex-row items-center gap-1.5">
       <View
         className="h-1.5 w-1.5 rounded-full"
-        style={{ backgroundColor: colors.success }}
+        style={{ backgroundColor: hasStock ? colors.success : colors.error }}
       />
       <Text
         className="text-sm font-medium"
-        style={{ color: colors.success }}
+        style={{ color: hasStock ? colors.success : colors.error }}
       >
-        {stockText}
+        {hasStock ? stockText : outOfStockLabel}
       </Text>
     </View>
-  ) : null;
+  );
 
   const thumb = (
     <View
@@ -171,7 +173,7 @@ export function ProductCard({
             <View className="flex-row items-baseline justify-between gap-1 pt-0.5">
               {priceBlock}
             </View>
-            {stockBlock ? <View>{stockBlock}</View> : null}
+            {stockBlock}
             <View className="flex-row items-center justify-end pt-1">
               {actions}
             </View>
