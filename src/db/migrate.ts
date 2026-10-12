@@ -2,7 +2,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 
 export type Migration = (db: SQLiteDatabase) => Promise<void>;
 
-const DATABASE_VERSION = 3;
+const DATABASE_VERSION = 4;
 
 const MIGRATIONS: Record<number, Migration> = {
   // v1: app settings (key/value). Future versions add products, sales, etc.
@@ -54,6 +54,30 @@ CREATE TABLE IF NOT EXISTS restocks (
 );
 CREATE INDEX IF NOT EXISTS idx_restocks_product_id ON restocks(product_id);
 CREATE INDEX IF NOT EXISTS idx_restocks_created_at ON restocks(created_at);
+`);
+  },
+  // v4: sales + sale_items — cada venta guarda sus líneas con cantidad y precio
+  // unitario, y descuenta esas unidades del stock del producto.
+  4: async (db) => {
+    await db.execAsync(`
+CREATE TABLE IF NOT EXISTS sales (
+  id TEXT PRIMARY KEY NOT NULL,
+  code TEXT NOT NULL,
+  total REAL NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS sale_items (
+  id TEXT PRIMARY KEY NOT NULL,
+  sale_id TEXT NOT NULL,
+  product_id TEXT NOT NULL,
+  quantity INTEGER NOT NULL,
+  unit_price REAL NOT NULL,
+  FOREIGN KEY (sale_id) REFERENCES sales(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_sales_created_at ON sales(created_at);
+CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON sale_items(sale_id);
+CREATE INDEX IF NOT EXISTS idx_sale_items_product_id ON sale_items(product_id);
 `);
   },
 };

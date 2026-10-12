@@ -9,31 +9,12 @@ import { listRestocks, deleteRestock, type RestockWithProduct } from '@/db/resto
 import { ICONS } from '@/features/surtidos/icon-map';
 import { RestockCard } from '@/features/surtidos/restock-card';
 import { useThemePreference } from '@/theme/theme-provider';
+import { formatDateTimeLabel, parseStoredDate } from '@/utils/format';
 import { MONTH_NAMES } from '@/utils/month-names';
 
 const MODULE_NAME = 'Surtidos';
 const APP_NAME = 'SimpleStock';
 const PAGE_SIZE = 10;
-
-const SHORT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-
-function parseStoredDate(value: string): Date {
-  const normalized = value.includes('T') ? value : value.replace(' ', 'T');
-  const hasTz = normalized.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(normalized);
-  return new Date(hasTz ? normalized : `${normalized}Z`);
-}
-
-function formatDateTimeLabel(value: string): string {
-  const date = parseStoredDate(value);
-  const day = date.getDate();
-  const month = SHORT_MONTHS[date.getMonth()];
-  const year = date.getFullYear();
-  let hours = date.getHours();
-  const meridiem = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12 || 12;
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${day} ${month} ${year}, ${hours}:${minutes} ${meridiem}`;
-}
 
 export default function SurtidosScreen() {
   const { colors } = useThemePreference();

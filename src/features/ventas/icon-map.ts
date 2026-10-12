@@ -1,30 +1,28 @@
 import {
-  BankIcon,
   CaretDownIcon,
-  CaretLeftIcon,
   CaretRightIcon,
   CaretUpIcon,
-  CreditCardIcon,
-  HandCoinsIcon,
+  CheckIcon,
+  MagnifyingGlassIcon,
+  PackageIcon,
+  PencilSimpleIcon,
   PlusIcon,
+  ScrollIcon,
+  TrashIcon,
+  XIcon,
   type Icon,
 } from 'phosphor-react-native';
 
-import type { PaymentIcon } from '@/features/ventas/types';
-
 export const ICONS = {
-  action: PlusIcon,
-  creditCard: CreditCardIcon,
-  bank: BankIcon,
-  banknote: HandCoinsIcon,
+  plus: PlusIcon,
+  search: MagnifyingGlassIcon,
+  clear: XIcon,
+  check: CheckIcon,
+  edit: PencilSimpleIcon,
+  delete: TrashIcon,
+  package: PackageIcon,
+  scroll: ScrollIcon,
   caretDown: CaretDownIcon,
   caretUp: CaretUpIcon,
-  caretLeft: CaretLeftIcon,
   caretRight: CaretRightIcon,
 } satisfies Record<string, Icon>;
-
-export const PAYMENT_ICONS: Record<PaymentIcon, Icon> = {
-  creditCard: CreditCardIcon,
-  bank: BankIcon,
-  banknote: HandCoinsIcon,
-};

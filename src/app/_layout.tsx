@@ -137,6 +137,42 @@ function RootNavigator() {
               headerTitleAlign: 'center',
             }}
           />
+          <Stack.Screen
+            name="venta/nueva"
+            options={{
+              title: 'Registrar venta',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="venta/[id]/index"
+            options={{
+              title: 'Detalles de la venta',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="venta/[id]/editar"
+            options={{
+              title: 'Editar venta',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
         </Stack>
       </NavigationThemeProvider>
     </>

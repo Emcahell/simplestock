@@ -23,3 +23,31 @@ export function parseUSDPrice(input: string): number {
   const decPart = lastDot >= 0 ? s.slice(lastDot + 1) : '';
   return Number(`${intPart}.${decPart}`) || 0;
 }
+
+const SHORT_MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+/**
+ * Las fechas se guardan en SQLite con `datetime('now')` (UTC, "YYYY-MM-DD HH:MM:SS")
+ * o con `Date.toISOString()` ("...T...Z"). Normaliza ambas para `new Date`.
+ */
+export function parseStoredDate(value: string): Date {
+  const normalized = value.includes('T') ? value : value.replace(' ', 'T');
+  const hasTz = normalized.endsWith('Z') || /[+-]\d{2}:?\d{2}$/.test(normalized);
+  return new Date(hasTz ? normalized : `${normalized}Z`);
+}
+
+/** Formatea una fecha guardada como "14 Nov 2023, 11:20 AM". */
+export function formatDateTimeLabel(value: string): string {
+  return formatStoredDate(parseStoredDate(value));
+}
+
+export function formatStoredDate(date: Date): string {
+  const day = date.getDate();
+  const month = SHORT_MONTHS[date.getMonth()];
+  const year = date.getFullYear();
+  let hours = date.getHours();
+  const meridiem = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12 || 12;
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${day} ${month} ${year}, ${hours}:${minutes} ${meridiem}`;
+}

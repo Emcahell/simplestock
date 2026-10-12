@@ -1,19 +1,21 @@
-import { useMemo, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { useCallback, useMemo, useState } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+import { router, useFocusEffect } from 'expo-router';
 
 import { AppHeader } from '@/components/app-header';
-import { PeriodFilter } from '@/components/period-filter';
+import { PeriodFilter, type PeriodSelection } from '@/components/period-filter';
 import { PrimaryActionButton } from '@/components/primary-action-button';
-import ventasData from '@/data/ventas.json';
+import { listSales, type SaleWithItems } from '@/db/sales';
 import { SaleCard } from '@/features/ventas/sale-card';
 import { TotalCard } from '@/features/ventas/total-card';
-import type { PeriodSelection, VentasData } from '@/features/ventas/types';
 import { useThemePreference } from '@/theme/theme-provider';
+import { formatDateTimeLabel, formatUSDPrice, parseStoredDate } from '@/utils/format';
 import { MONTH_NAMES } from '@/utils/month-names';
 
 const MODULE_NAME = 'Ventas';
-
-const data = ventasData as VentasData;
+const APP_NAME = 'SimpleStock';
+const PAGE_SIZE = 10;
+const TOTAL_LABEL = 'Total Recaudado';
 
 export default function VentasScreen() {
   const { colors } = useThemePreference();
@@ -24,28 +26,39 @@ export default function VentasScreen() {
   const [panelOpen, setPanelOpen] = useState(false);
   const [draft, setDraft] = useState<number>(currentMonth);
   const [totalExpanded, setTotalExpanded] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [sales, setSales] = useState<SaleWithItems[]>([]);
 
-  const totals = useMemo(() => {
-    if (period === 'all') return data.totals.all;
-    return (
-      data.totals.months.find((entry) => entry.month === period) ?? {
-        amount: '—',
-        count: 0,
-      }
-    );
-  }, [period]);
+  const load = useCallback(async () => {
+    setSales(await listSales());
+  }, []);
+
+  useFocusEffect(useCallback(() => {
+    void load();
+  }, [load]));
 
   const visibleSales = useMemo(() => {
-    if (period === 'all') return data.sales.items;
-    return data.sales.items.filter((sale) => {
-      const parsed = new Date(`${sale.date}T00:00:00`);
+    if (period === 'all') return sales;
+    return sales.filter((sale) => {
+      const parsed = parseStoredDate(sale.created_at);
       return !Number.isNaN(parsed.getTime()) && parsed.getMonth() === period;
     });
-  }, [period]);
+  }, [period, sales]);
+
+  const monthTotal = useMemo(
+    () => visibleSales.reduce((sum, sale) => sum + sale.total, 0),
+    [visibleSales]
+  );
+
+  const shownSales = useMemo(
+    () => visibleSales.slice(0, visibleCount),
+    [visibleSales, visibleCount]
+  );
+  const hasMore = visibleCount < visibleSales.length;
 
   return (
     <View className="flex-1 bg-surface">
-      <AppHeader moduleName={MODULE_NAME} appName={data.appName} />
+      <AppHeader moduleName={MODULE_NAME} appName={APP_NAME} />
 
       <ScrollView
         className="flex-1"
@@ -55,16 +68,19 @@ export default function VentasScreen() {
         <View className="gap-4">
           {/* Acción principal */}
           <View className="w-full pt-1">
-            <PrimaryActionButton label={data.action.label} />
+            <PrimaryActionButton
+              label="Registrar nueva venta"
+              onPress={() => router.push('/venta/nueva')}
+            />
           </View>
 
           {/* Filtro por periodo */}
           <PeriodFilter
-            allLabel={data.filter.all.label}
-            monthLabel={data.filter.month.label}
-            navigateLabel={data.filter.navigateLabel}
-            applyLabel={data.filter.applyLabel}
-            cancelLabel={data.filter.cancelLabel}
+            allLabel="Todo"
+            monthLabel="Este mes"
+            navigateLabel="Navegar meses"
+            applyLabel="Aplicar"
+            cancelLabel="Cancelar"
             monthNames={MONTH_NAMES}
             value={period}
             currentMonth={currentMonth}
@@ -90,59 +106,74 @@ export default function VentasScreen() {
             onCancel={() => setPanelOpen(false)}
           />
 
-          {/* Total recaudado */}
-          <TotalCard
-            label={data.summary.label}
-            amount={totals.amount}
-            currency={data.summary.currency}
-            expanded={totalExpanded}
-            onToggle={() => setTotalExpanded((prev) => !prev)}
-          />
+          {/* Total recaudado (solo cuando hay un mes seleccionado) */}
+          {period !== 'all' ? (
+            <TotalCard
+              label={TOTAL_LABEL}
+              amount={formatUSDPrice(monthTotal)}
+              currency="USD"
+              expanded={totalExpanded}
+              onToggle={() => setTotalExpanded((prev) => !prev)}
+            />
+          ) : null}
 
-          {/* Lista de transacciones */}
+          {/* Lista de ventas */}
           <View className="w-full gap-2.5 pb-2">
-            <View className="flex-row items-center justify-between pt-1">
-              <View className="flex-row items-center gap-2">
+            <View className="flex-row items-baseline justify-between pt-1">
+              <View className="flex-row items-center gap-1.5">
                 <Text
                   className="text-sm font-semibold text-on-surface-variant"
                   style={{ letterSpacing: 0.8 }}
                 >
-                  {data.sales.title.toUpperCase()}
+                  VENTAS
                 </Text>
                 <View className="rounded-full bg-surface-container-high px-1.5 py-0.5">
-                  <Text
-                    className="text-2xs font-bold"
-                    style={{ color: colors.onSurfaceVariant }}
-                  >
-                    {totals.count}
+                  <Text className="text-2xs font-bold" style={{ color: colors.onSurfaceVariant }}>
+                    {visibleSales.length}
                   </Text>
                 </View>
               </View>
+              <Text className="text-sm text-on-surface-variant">
+                Mostrando {shownSales.length} de {visibleSales.length}
+              </Text>
             </View>
 
-            {visibleSales.map((sale) => (
+            {shownSales.map((sale) => (
               <SaleCard
                 key={sale.id}
-                id={sale.id}
-                timeLabel={sale.timeLabel}
-                paymentMethod={sale.paymentMethod}
-                paymentIcon={sale.paymentIcon}
-                itemsSummary={sale.itemsSummary}
-                amount={sale.amount}
-                noteLabel={data.sales.noteLabel}
-                currency={data.summary.currency}
+                code={sale.code}
+                dateLabel={formatDateTimeLabel(sale.created_at)}
+                itemsSummary={sale.items
+                  .map((item) => `${item.quantity}x ${item.product_name}`)
+                  .join(', ')}
+                amount={formatUSDPrice(sale.total)}
+                currency="USD"
+                detailLabel="Ver detalles"
+                onPressDetails={() =>
+                  router.push({ pathname: '/venta/[id]', params: { id: sale.id } })
+                }
               />
             ))}
 
-            {visibleSales.length === 0 ? (
+            {shownSales.length === 0 ? (
               <View className="w-full items-center rounded-xl bg-surface-container px-4 py-8">
-                <Text
-                  className="text-sm"
-                  style={{ color: colors.onSurfaceVariant }}
-                >
-                  Sin transacciones para el periodo seleccionado
+                <Text className="text-sm" style={{ color: colors.onSurfaceVariant }}>
+                  Sin ventas para el periodo seleccionado
                 </Text>
               </View>
+            ) : null}
+
+            {hasMore ? (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel="Ver más"
+                accessibilityState={{ expanded: false }}
+                onPress={() => setVisibleCount((current) => current + PAGE_SIZE)}
+                className="mt-1 w-full items-center justify-center rounded-xl border border-primary-outline bg-surface-container py-3"
+                style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+              >
+                <Text className="text-sm font-semibold text-primary">Ver más</Text>
+              </Pressable>
             ) : null}
           </View>
         </View>
