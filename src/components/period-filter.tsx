@@ -1,12 +1,18 @@
 import { Pressable, Text, View } from 'react-native';
 
-import { ICONS } from '@/features/ventas/icon-map';
-import type { PeriodSelection, VentasData } from '@/features/ventas/types';
+import { CaretDownIcon, CaretUpIcon } from 'phosphor-react-native';
+
 import { useThemePreference } from '@/theme/theme-provider';
 
+export type PeriodSelection = 'all' | number;
+
 type PeriodFilterProps = {
-  data: VentasData['filter'];
-  monthNames: VentasData['monthNames'];
+  allLabel: string;
+  monthLabel: string;
+  navigateLabel: string;
+  applyLabel: string;
+  cancelLabel: string;
+  monthNames: string[];
   value: PeriodSelection;
   currentMonth: number;
   isOpen: boolean;
@@ -35,7 +41,7 @@ function Chip({
 }) {
   const { colors } = useThemePreference();
   const tint = active ? colors.onPrimary : colors.onSurfaceVariant;
-  const Caret = caretUp ? ICONS.caretUp : ICONS.caretDown;
+  const Caret = caretUp ? CaretUpIcon : CaretDownIcon;
 
   return (
     <Pressable
@@ -57,7 +63,11 @@ function Chip({
 }
 
 export function PeriodFilter({
-  data,
+  allLabel,
+  monthLabel,
+  navigateLabel,
+  applyLabel,
+  cancelLabel,
   monthNames,
   value,
   currentMonth,
@@ -72,16 +82,16 @@ export function PeriodFilter({
   const { colors } = useThemePreference();
   const selectedMonth = value === 'all' ? null : value;
   const monthChipLabel =
-    selectedMonth === null ? data.month.label : monthNames[selectedMonth];
+    selectedMonth === null ? monthLabel : monthNames[selectedMonth];
 
   return (
     <View className="w-full">
       <View className="w-full flex-row items-center gap-2 py-0.5">
         <Chip
-          label={data.all.label}
+          label={allLabel}
           active={selectedMonth === null}
           onPress={onSelectAll}
-          accessibilityLabel={data.all.label}
+          accessibilityLabel={allLabel}
         />
         <Chip
           label={monthChipLabel}
@@ -99,7 +109,7 @@ export function PeriodFilter({
             className="text-sm font-semibold text-on-surface-variant"
             style={{ letterSpacing: 0.8 }}
           >
-            {data.navigateLabel.toUpperCase()}
+            {navigateLabel.toUpperCase()}
           </Text>
 
           <View className="mt-2.5 flex-row flex-wrap gap-2">
@@ -144,7 +154,7 @@ export function PeriodFilter({
             <Pressable
               onPress={onCancel}
               accessibilityRole="button"
-              accessibilityLabel={data.cancelLabel}
+              accessibilityLabel={cancelLabel}
               className="flex-1 items-center justify-center rounded-lg bg-surface-container-high py-2.5"
               style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             >
@@ -152,14 +162,14 @@ export function PeriodFilter({
                 className="text-sm font-medium"
                 style={{ color: colors.onSurfaceVariant }}
               >
-                {data.cancelLabel}
+                {cancelLabel}
               </Text>
             </Pressable>
 
             <Pressable
               onPress={() => onApply(draft)}
               accessibilityRole="button"
-              accessibilityLabel={data.applyLabel}
+              accessibilityLabel={applyLabel}
               className="flex-1 items-center justify-center rounded-lg bg-primary py-2.5"
               style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
             >
@@ -167,7 +177,7 @@ export function PeriodFilter({
                 className="text-sm font-semibold"
                 style={{ color: colors.onPrimary }}
               >
-                {data.applyLabel}
+                {applyLabel}
               </Text>
             </Pressable>
           </View>

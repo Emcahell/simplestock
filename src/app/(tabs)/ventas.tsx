@@ -2,13 +2,14 @@ import { useMemo, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
 import { AppHeader } from '@/components/app-header';
+import { PeriodFilter } from '@/components/period-filter';
 import { PrimaryActionButton } from '@/components/primary-action-button';
 import ventasData from '@/data/ventas.json';
-import { PeriodFilter } from '@/features/ventas/period-filter';
 import { SaleCard } from '@/features/ventas/sale-card';
 import { TotalCard } from '@/features/ventas/total-card';
 import type { PeriodSelection, VentasData } from '@/features/ventas/types';
 import { useThemePreference } from '@/theme/theme-provider';
+import { MONTH_NAMES } from '@/utils/month-names';
 
 const MODULE_NAME = 'Ventas';
 
@@ -59,8 +60,12 @@ export default function VentasScreen() {
 
           {/* Filtro por periodo */}
           <PeriodFilter
-            data={data.filter}
-            monthNames={data.monthNames}
+            allLabel={data.filter.all.label}
+            monthLabel={data.filter.month.label}
+            navigateLabel={data.filter.navigateLabel}
+            applyLabel={data.filter.applyLabel}
+            cancelLabel={data.filter.cancelLabel}
+            monthNames={MONTH_NAMES}
             value={period}
             currentMonth={currentMonth}
             isOpen={panelOpen}

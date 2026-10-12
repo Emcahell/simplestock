@@ -2,7 +2,7 @@ import type { SQLiteDatabase } from 'expo-sqlite';
 
 export type Migration = (db: SQLiteDatabase) => Promise<void>;
 
-const DATABASE_VERSION = 2;
+const DATABASE_VERSION = 3;
 
 const MIGRATIONS: Record<number, Migration> = {
   // v1: app settings (key/value). Future versions add products, sales, etc.
@@ -37,6 +37,23 @@ CREATE TABLE IF NOT EXISTS products (
 );
 CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_name ON products(name COLLATE NOCASE);
+`);
+  },
+  // v3: restocks (surtidos) — cada ingreso suma unidades al stock del producto
+  // y guarda el stock resultante tras el ingreso.
+  3: async (db) => {
+    await db.execAsync(`
+CREATE TABLE IF NOT EXISTS restocks (
+  id TEXT PRIMARY KEY NOT NULL,
+  product_id TEXT NOT NULL,
+  quantity INTEGER NOT NULL,
+  description TEXT NOT NULL DEFAULT '',
+  stock_after INTEGER NOT NULL,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+CREATE INDEX IF NOT EXISTS idx_restocks_product_id ON restocks(product_id);
+CREATE INDEX IF NOT EXISTS idx_restocks_created_at ON restocks(created_at);
 `);
   },
 };
