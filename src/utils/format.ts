@@ -1,8 +1,8 @@
 export function formatUSDPrice(value: number | string): string {
   const num = typeof value === 'string' ? Number(value.replace(/[^0-9.,-]/g, '').replace(',', '.')) : value;
   const n = Number.isFinite(num) ? num : 0;
-  // Formato simple con 2 decimales
-  return n.toLocaleString('es-VE', {
+  // Formato USD: decimal con punto y miles con coma (en-US).
+  return n.toLocaleString('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
