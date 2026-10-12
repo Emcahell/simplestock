@@ -113,6 +113,30 @@ function RootNavigator() {
               headerTitleAlign: 'center',
             }}
           />
+          <Stack.Screen
+            name="surtido/nuevo"
+            options={{
+              title: 'Nuevo surtido',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
+          <Stack.Screen
+            name="surtido/[id]/editar"
+            options={{
+              title: 'Editar surtido',
+              headerBackTitle: 'Volver',
+              headerStyle: { backgroundColor: colors.surfaceContainer },
+              headerTintColor: colors.primary,
+              headerTitleStyle: { color: colors.onSurface },
+              headerShadowVisible: false,
+              headerTitleAlign: 'center',
+            }}
+          />
         </Stack>
       </NavigationThemeProvider>
     </>
