@@ -1,3 +1,4 @@
+import { logActivity } from '@/db/activities';
 import { getDatabase } from '@/db/index';
 
 export type Restock = {
@@ -52,6 +53,14 @@ async function getProductStock(db: Awaited<ReturnType<typeof getDatabase>>, prod
   return row?.stock ?? 0;
 }
 
+async function getProductName(db: Awaited<ReturnType<typeof getDatabase>>, productId: string): Promise<string> {
+  const row = await db.getFirstAsync<{ name: string }>(
+    'SELECT name FROM products WHERE id = ?',
+    productId
+  );
+  return row?.name ?? 'Producto';
+}
+
 export async function createRestock(input: {
   product_id: string;
   quantity: number;
@@ -65,6 +74,7 @@ export async function createRestock(input: {
   try {
     const current = await getProductStock(db, input.product_id);
     const stockAfter = current + input.quantity;
+    const productName = await getProductName(db, input.product_id);
     await db.runAsync(
       `INSERT INTO restocks (id, product_id, quantity, description, stock_after, created_at)
        VALUES (?, ?, ?, ?, ?, ?)`,
@@ -81,6 +91,14 @@ export async function createRestock(input: {
       now,
       input.product_id
     );
+    await logActivity(db, {
+      type: 'restock_created',
+      title: 'Surtido registrado',
+      subtitle: productName,
+      value: `+${input.quantity} un.`,
+      entity_id: id,
+      created_at: now,
+    });
     await db.runAsync('COMMIT');
   } catch (error) {
     await db.runAsync('ROLLBACK');
@@ -111,6 +129,7 @@ export async function updateRestock(
 
     const delta = input.quantity - existing.quantity;
     const stockAfter = existing.stock_after + delta;
+    const productName = await getProductName(db, existing.product_id);
     await db.runAsync(
       'UPDATE products SET stock = ?, updated_at = ? WHERE id = ?',
       stockAfter,
@@ -124,6 +143,13 @@ export async function updateRestock(
       stockAfter,
       id
     );
+    await logActivity(db, {
+      type: 'restock_updated',
+      title: 'Surtido editado',
+      subtitle: productName,
+      value: `+${input.quantity} un.`,
+      entity_id: id,
+    });
     await db.runAsync('COMMIT');
   } catch (error) {
     await db.runAsync('ROLLBACK');

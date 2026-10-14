@@ -1,15 +1,34 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 
-import registrosData from '@/data/registros.json';
+import { listActivities } from '@/db/activities';
+import { toActivityItem } from '@/features/inicio/activity-item';
 import { ActivityRow } from '@/features/inicio/activity-row';
-import type { RegistrosData } from '@/features/registros/types';
+import type { ActivityItem } from '@/features/inicio/types';
 
-const data = registrosData as RegistrosData;
+const PAGE_SIZE = 10;
 
 export default function RegistrosScreen() {
-  const items = data.items;
-  const [visible, setVisible] = useState(data.pageSize);
+  const [items, setItems] = useState<ActivityItem[]>([]);
+  const [visible, setVisible] = useState(PAGE_SIZE);
+
+  useFocusEffect(
+    useCallback(() => {
+      let alive = true;
+      async function load() {
+        const rows = await listActivities();
+        if (alive) {
+          setItems(rows.map(toActivityItem));
+          setVisible(PAGE_SIZE);
+        }
+      }
+      void load();
+      return () => {
+        alive = false;
+      };
+    }, [])
+  );
 
   const shown = useMemo(() => items.slice(0, visible), [items, visible]);
   const hasMore = visible < items.length;
@@ -26,7 +45,7 @@ export default function RegistrosScreen() {
           className="text-sm font-medium text-on-surface-variant"
           style={{ letterSpacing: 0.8 }}
         >
-          {`${items.length} ${data.summaryLabel}`.toUpperCase()}
+          {`${items.length} ${items.length === 1 ? 'registro' : 'registros'}`.toUpperCase()}
         </Text>
         <Text className="text-sm text-on-surface-variant">
           {shown.length} de {items.length}
@@ -47,7 +66,7 @@ export default function RegistrosScreen() {
         {shown.length === 0 ? (
           <View className="items-center px-4 py-8">
             <Text className="text-sm text-on-surface-variant">
-              {data.emptyLabel}
+              Sin actividades registradas
             </Text>
           </View>
         ) : null}
@@ -57,15 +76,13 @@ export default function RegistrosScreen() {
       {hasMore ? (
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={data.showMoreLabel}
+          accessibilityLabel="Ver más"
           accessibilityState={{ expanded: false }}
-          onPress={() => setVisible((current) => current + data.pageSize)}
+          onPress={() => setVisible((current) => current + PAGE_SIZE)}
           className="mt-4 w-full items-center justify-center rounded-xl border border-primary-outline bg-surface-container py-3"
           style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
         >
-          <Text className="text-sm font-semibold text-primary">
-            {data.showMoreLabel}
-          </Text>
+          <Text className="text-sm font-semibold text-primary">Ver más</Text>
         </Pressable>
       ) : null}
     </ScrollView>

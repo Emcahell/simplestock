@@ -1,3 +1,4 @@
+import { logActivity } from '@/db/activities';
 import { getDatabase } from '@/db/index';
 
 export type Category = {
@@ -46,6 +47,14 @@ export async function createCategory(name: string): Promise<Category> {
     trimmed
   );
   return row ?? { id, name: trimmed };
+}
+
+export async function countProducts(): Promise<number> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ count: number }>(
+    'SELECT COUNT(*) AS count FROM products'
+  );
+  return row?.count ?? 0;
 }
 
 export async function listProducts(): Promise<ProductWithCategory[]> {
@@ -97,6 +106,14 @@ export async function createProduct(input: {
   );
   const row = await db.getFirstAsync<Product>('SELECT * FROM products WHERE id = ?', id);
   if (!row) throw new Error('Failed to create product');
+  await logActivity(db, {
+    type: 'product_created',
+    title: 'Producto creado',
+    subtitle: input.name.trim(),
+    value: 'Nuevo',
+    entity_id: id,
+    created_at: now,
+  });
   return row;
 }
 
@@ -122,6 +139,14 @@ export async function updateProduct(id: string, input: {
     now,
     id
   );
+  await logActivity(db, {
+    type: 'product_updated',
+    title: 'Producto editado',
+    subtitle: input.name.trim(),
+    value: 'Editado',
+    entity_id: id,
+    created_at: now,
+  });
 }
 
 export async function deleteProduct(id: string): Promise<void> {

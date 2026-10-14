@@ -51,3 +51,21 @@ export function formatStoredDate(date: Date): string {
   const minutes = String(date.getMinutes()).padStart(2, '0');
   return `${day} ${month} ${year}, ${hours}:${minutes} ${meridiem}`;
 }
+
+/** Etiqueta relativa ("Hace un momento", "Hace 15m", "Ayer", "14 Nov 2023"). */
+export function formatRelativeTime(value: string): string {
+  const date = parseStoredDate(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const diff = Date.now() - date.getTime();
+  if (diff < 60_000) return 'Hace un momento';
+  const minutes = Math.floor(diff / 60_000);
+  if (minutes < 60) return `Hace ${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `Hace ${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return 'Ayer';
+  if (days < 7) return `Hace ${days}d`;
+  const day = date.getDate();
+  const month = SHORT_MONTHS[date.getMonth()];
+  return `${day} ${month} ${date.getFullYear()}`;
+}

@@ -1,5 +1,6 @@
 import {
   PackageIcon,
+  PencilSimpleIcon,
   PlusCircleIcon,
   PlusIcon,
   ScrollIcon,
@@ -19,4 +20,5 @@ export const ICONS: Record<IconName, Icon> = {
   plusCircle: PlusCircleIcon,
   plusSimple: PlusIcon,
   sliders: SlidersIcon,
+  pencil: PencilSimpleIcon,
 };

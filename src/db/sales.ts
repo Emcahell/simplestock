@@ -1,6 +1,8 @@
 import type { SQLiteDatabase } from 'expo-sqlite';
 
+import { logActivity } from '@/db/activities';
 import { getDatabase } from '@/db/index';
+import { formatUSDPrice } from '@/utils/format';
 
 export type Sale = {
   id: string;
@@ -63,6 +65,10 @@ function computeTotal(items: SaleInputItem[]): number {
   return items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0);
 }
 
+function itemsSubtitle(count: number): string {
+  return `${count} ${count === 1 ? 'artículo' : 'artículos'}`;
+}
+
 async function loadItems(db: Db, saleIds: string[]): Promise<Map<string, SaleItemWithProduct[]>> {
   const grouped = new Map<string, SaleItemWithProduct[]>();
   if (saleIds.length === 0) return grouped;
@@ -93,6 +99,21 @@ export async function listSales(): Promise<SaleWithItems[]> {
   );
   const itemsBySale = await loadItems(db, sales.map((sale) => sale.id));
   return sales.map((sale) => ({ ...sale, items: itemsBySale.get(sale.id) ?? [] }));
+}
+
+export type SalesTodaySummary = {
+  count: number;
+  total: number;
+};
+
+export async function getSalesTodaySummary(): Promise<SalesTodaySummary> {
+  const db = await getDatabase();
+  const row = await db.getFirstAsync<{ count: number; total: number }>(
+    `SELECT COUNT(*) AS count, COALESCE(SUM(total), 0) AS total
+     FROM sales
+     WHERE date(created_at, 'localtime') = date('now', 'localtime')`
+  );
+  return { count: row?.count ?? 0, total: row?.total ?? 0 };
 }
 
 export async function getSaleById(id: string): Promise<SaleWithItems | null> {
@@ -130,6 +151,14 @@ export async function createSale(items: SaleInputItem[]): Promise<Sale> {
       );
       await applyStockDelta(db, item.product_id, -item.quantity);
     }
+    await logActivity(db, {
+      type: 'sale_created',
+      title: `Venta ${code}`,
+      subtitle: itemsSubtitle(items.length),
+      value: `+$${formatUSDPrice(total)}`,
+      entity_id: id,
+      created_at: now,
+    });
     await db.runAsync('COMMIT');
   } catch (error) {
     await db.runAsync('ROLLBACK');
@@ -175,6 +204,13 @@ export async function updateSale(id: string, items: SaleInputItem[]): Promise<vo
     }
 
     await db.runAsync('UPDATE sales SET total = ? WHERE id = ?', total, id);
+    await logActivity(db, {
+      type: 'sale_updated',
+      title: `Venta ${existing.code} editada`,
+      subtitle: itemsSubtitle(items.length),
+      value: `+$${formatUSDPrice(total)}`,
+      entity_id: id,
+    });
     await db.runAsync('COMMIT');
   } catch (error) {
     await db.runAsync('ROLLBACK');

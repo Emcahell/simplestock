@@ -9,7 +9,8 @@ export type IconName =
   | 'tray'
   | 'plusCircle'
   | 'plusSimple'
-  | 'sliders';
+  | 'sliders'
+  | 'pencil';
 
 /**
  * Single activity entry. Shared by Inicio and Registros de actividades, both of
@@ -33,22 +34,17 @@ export type HomeData = {
   appName: string;
   greeting: {
     name: string;
-    dateLabel: string;
   };
   metrics: {
     products: {
       label: string;
       icon: IconName;
-      value: string;
       unit: string;
     };
     sales: {
       label: string;
       icon: IconName;
-      amountWhole: string;
-      amountCents: string;
       footerIcon: IconName;
-      footerLabel: string;
     };
   };
   quickActions: {
@@ -64,6 +60,5 @@ export type HomeData = {
   activity: {
     title: string;
     linkLabel: string;
-    items: ActivityItem[];
   };
 };

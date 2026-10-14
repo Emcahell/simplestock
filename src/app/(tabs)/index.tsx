@@ -1,22 +1,72 @@
+import { useCallback, useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect, type Href } from 'expo-router';
 
 import { AppHeader } from '@/components/app-header';
 import inicio from '@/data/inicio.json';
+import { listActivities } from '@/db/activities';
+import { countProducts } from '@/db/products';
+import { getSalesTodaySummary, type SalesTodaySummary } from '@/db/sales';
+import { toActivityItem } from '@/features/inicio/activity-item';
 import { ActivityRow } from '@/features/inicio/activity-row';
 import { ICONS } from '@/features/inicio/icon-map';
 import { MetricCard } from '@/features/inicio/metric-card';
 import { QuickAction } from '@/features/inicio/quick-action';
-import type { HomeData } from '@/features/inicio/types';
+import type { ActivityItem, HomeData } from '@/features/inicio/types';
 import { useThemePreference } from '@/theme/theme-provider';
+import { formatUSDPrice } from '@/utils/format';
+import { MONTH_NAMES } from '@/utils/month-names';
 
 const MODULE_NAME = 'Inicio';
+const RECENT_ACTIVITIES = 5;
+
+const QUICK_ACTION_ROUTES: Record<string, Href> = {
+  'registrar-venta': '/venta/nueva',
+  'ingresar-surtido': '/surtido/nuevo',
+  'nuevo-articulo': '/producto/nuevo',
+};
 
 const data = inicio as HomeData;
 
 export default function HomeScreen() {
   const { colors } = useThemePreference();
   const { greeting, metrics, quickActions, activity } = data;
+
+  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [productCount, setProductCount] = useState(0);
+  const [salesToday, setSalesToday] = useState<SalesTodaySummary>({ count: 0, total: 0 });
+
+  const dateLabel = useMemo(() => {
+    const today = new Date();
+    return `Hoy, ${today.getDate()} de ${MONTH_NAMES[today.getMonth()]}`;
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      let alive = true;
+      async function load() {
+        const [rows, count, today] = await Promise.all([
+          listActivities(RECENT_ACTIVITIES),
+          countProducts(),
+          getSalesTodaySummary(),
+        ]);
+        if (!alive) return;
+        setActivities(rows.map(toActivityItem));
+        setProductCount(count);
+        setSalesToday(today);
+      }
+      void load();
+      return () => {
+        alive = false;
+      };
+    }, [])
+  );
+
+  const formattedTotal = formatUSDPrice(salesToday.total);
+  const [amountWhole, amountCents] = formattedTotal.split('.');
+  const salesFooterLabel = `${salesToday.count} ${
+    salesToday.count === 1 ? 'venta' : 'ventas'
+  }`;
 
   return (
     <View className="flex-1 bg-surface">
@@ -36,7 +86,7 @@ export default function HomeScreen() {
             Hola, {greeting.name} 👋
           </Text>
           <Text className="mt-0.5 text-sm text-on-surface-variant">
-            {greeting.dateLabel}
+            {dateLabel}
           </Text>
         </View>
 
@@ -53,7 +103,7 @@ export default function HomeScreen() {
                 className="text-2xl font-bold text-on-surface"
                 style={{ letterSpacing: -0.4 }}
               >
-                {metrics.products.value}
+                {productCount}
               </Text>
               <Text className="ml-1 text-sm text-on-surface-variant">
                 {metrics.products.unit}
@@ -71,9 +121,9 @@ export default function HomeScreen() {
               className="text-2xl font-bold text-on-surface"
               style={{ letterSpacing: -0.4 }}
             >
-              {metrics.sales.amountWhole}
+              {`$${amountWhole}`}
               <Text className="text-lg font-medium text-on-surface-variant">
-                {metrics.sales.amountCents}
+                {`.${amountCents}`}
               </Text>
             </Text>
 
@@ -84,7 +134,7 @@ export default function HomeScreen() {
                   <>
                     <FooterIcon size={14} color={colors.onSurfaceVariant} />
                     <Text className="text-sm text-on-surface-variant" style={{ fontWeight: '500' }}>
-                      {metrics.sales.footerLabel}
+                      {salesFooterLabel}
                     </Text>
                   </>
                 );
@@ -110,6 +160,10 @@ export default function HomeScreen() {
                 icon={action.icon}
                 tone={action.tone}
                 variant={action.variant}
+                onPress={() => {
+                  const target = QUICK_ACTION_ROUTES[action.id];
+                  if (target) router.push(target);
+                }}
               />
             ))}
           </View>
@@ -141,7 +195,7 @@ export default function HomeScreen() {
           </View>
 
           <View className="overflow-hidden rounded-xl bg-surface-container">
-            {activity.items.map((item, index) => (
+            {activities.map((item, index) => (
               <View key={item.id}>
                 {index > 0 && (
                   <View className="mx-3.5 h-px bg-surface-container-high" />
@@ -149,6 +203,14 @@ export default function HomeScreen() {
                 <ActivityRow {...item} />
               </View>
             ))}
+
+            {activities.length === 0 ? (
+              <View className="items-center px-4 py-8">
+                <Text className="text-sm text-on-surface-variant">
+                  Sin actividades registradas
+                </Text>
+              </View>
+            ) : null}
           </View>
         </View>
       </ScrollView>
