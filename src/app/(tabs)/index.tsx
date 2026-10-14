@@ -13,6 +13,7 @@ import { ICONS } from '@/features/inicio/icon-map';
 import { MetricCard } from '@/features/inicio/metric-card';
 import { QuickAction } from '@/features/inicio/quick-action';
 import type { ActivityItem, HomeData } from '@/features/inicio/types';
+import { useUser } from '@/features/user/user-provider';
 import { useThemePreference } from '@/theme/theme-provider';
 import { formatUSDPrice } from '@/utils/format';
 import { MONTH_NAMES } from '@/utils/month-names';
@@ -30,7 +31,8 @@ const data = inicio as HomeData;
 
 export default function HomeScreen() {
   const { colors } = useThemePreference();
-  const { greeting, metrics, quickActions, activity } = data;
+  const { name } = useUser();
+  const { metrics, quickActions, activity } = data;
 
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [productCount, setProductCount] = useState(0);
@@ -83,7 +85,7 @@ export default function HomeScreen() {
             className="text-2xl font-semibold text-on-surface"
             style={{ letterSpacing: -0.3 }}
           >
-            Hola, {greeting.name} 👋
+            Hola, {name} 👋
           </Text>
           <Text className="mt-0.5 text-sm text-on-surface-variant">
             {dateLabel}

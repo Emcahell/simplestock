@@ -32,9 +32,6 @@ export type ActivityItem = {
  */
 export type HomeData = {
   appName: string;
-  greeting: {
-    name: string;
-  };
   metrics: {
     products: {
       label: string;

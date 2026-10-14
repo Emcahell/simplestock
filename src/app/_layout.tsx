@@ -12,6 +12,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { UserProvider, useUser } from '@/features/user/user-provider';
 import { ThemeProvider, useThemePreference } from '@/theme/theme-provider';
 
 SplashScreen.preventAutoHideAsync();
@@ -19,13 +20,16 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   return (
     <ThemeProvider>
-      <RootNavigator />
+      <UserProvider>
+        <RootNavigator />
+      </UserProvider>
     </ThemeProvider>
   );
 }
 
 function RootNavigator() {
   const { resolved, hydrated, colors } = useThemePreference();
+  const { name, ready } = useUser();
   const navigationTheme =
     resolved === 'dark' ? NavigationDarkTheme : NavigationDefaultTheme;
 
@@ -35,9 +39,24 @@ function RootNavigator() {
     }
   }, [resolved, colors]);
 
-  if (!hydrated) {
+  const hasName = Boolean(name);
+
+  // El header nativo sigue la paleta del tema resuelto (mismo fondo que las
+  // pantallas), no el esquema del sistema: en claro quedaría una barra blanca
+  // sobre las pantallas oscuras.
+  const header = {
+    headerBackTitle: 'Volver',
+    headerStyle: { backgroundColor: colors.surfaceContainer },
+    headerTintColor: colors.primary,
+    headerTitleStyle: { color: colors.onSurface },
+    headerShadowVisible: false,
+    headerTitleAlign: 'center' as const,
+  };
+
+  if (!hydrated || !ready) {
     // El splash nativo sigue visible (`hideAsync` lo llama el overlay en su
-    // onLayout) hasta que se lee el tema persistido: evita el flash de tema.
+    // onLayout) hasta que se lee el tema persistido y el nombre del usuario:
+    // evita el flash de tema y de la pantalla de bienvenida.
     return null;
   }
 
@@ -61,118 +80,49 @@ function RootNavigator() {
         }}
       >
         <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="registros"
-            options={{
-              title: 'Registros de actividades',
-              headerBackTitle: 'Volver',
-              // El header nativo sigue la paleta del tema resuelto (mismo
-              // fondo que las pantallas), no el esquema del sistema: en claro
-              // quedaría una barra blanca sobre las pantallas oscuras.
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="producto/nuevo"
-            options={{
-              title: 'Nuevo producto',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="producto/[id]/index"
-            options={{
-              title: 'Detalles del producto',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="producto/[id]/editar"
-            options={{
-              title: 'Editar producto',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="surtido/nuevo"
-            options={{
-              title: 'Nuevo surtido',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="surtido/[id]/editar"
-            options={{
-              title: 'Editar surtido',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="venta/nueva"
-            options={{
-              title: 'Registrar venta',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="venta/[id]/index"
-            options={{
-              title: 'Detalles de la venta',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
-          <Stack.Screen
-            name="venta/[id]/editar"
-            options={{
-              title: 'Editar venta',
-              headerBackTitle: 'Volver',
-              headerStyle: { backgroundColor: colors.surfaceContainer },
-              headerTintColor: colors.primary,
-              headerTitleStyle: { color: colors.onSurface },
-              headerShadowVisible: false,
-              headerTitleAlign: 'center',
-            }}
-          />
+          <Stack.Protected guard={hasName}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="registros"
+              options={{ title: 'Registros de actividades', ...header }}
+            />
+            <Stack.Screen
+              name="producto/nuevo"
+              options={{ title: 'Nuevo producto', ...header }}
+            />
+            <Stack.Screen
+              name="producto/[id]/index"
+              options={{ title: 'Detalles del producto', ...header }}
+            />
+            <Stack.Screen
+              name="producto/[id]/editar"
+              options={{ title: 'Editar producto', ...header }}
+            />
+            <Stack.Screen
+              name="surtido/nuevo"
+              options={{ title: 'Nuevo surtido', ...header }}
+            />
+            <Stack.Screen
+              name="surtido/[id]/editar"
+              options={{ title: 'Editar surtido', ...header }}
+            />
+            <Stack.Screen
+              name="venta/nueva"
+              options={{ title: 'Registrar venta', ...header }}
+            />
+            <Stack.Screen
+              name="venta/[id]/index"
+              options={{ title: 'Detalles de la venta', ...header }}
+            />
+            <Stack.Screen
+              name="venta/[id]/editar"
+              options={{ title: 'Editar venta', ...header }}
+            />
+          </Stack.Protected>
+
+          <Stack.Protected guard={!hasName}>
+            <Stack.Screen name="bienvenida" options={{ headerShown: false }} />
+          </Stack.Protected>
         </Stack>
       </NavigationThemeProvider>
     </>

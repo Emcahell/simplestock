@@ -1,8 +1,5 @@
 {
   "appName": "SimpleStock",
-  "greeting": {
-    "name": "Emmanuel"
-  },
   "metrics": {
     "products": {
       "label": "Productos",
