@@ -9,6 +9,7 @@ import {
   type TextStyle,
 } from 'react-native';
 import { Image } from 'expo-image';
+import * as WebBrowser from 'expo-web-browser';
 
 import logo from '@/assets/simplestock-logo.png';
 import { useUser } from '@/features/user/user-provider';
@@ -16,6 +17,13 @@ import { useThemePreference } from '@/theme/theme-provider';
 import { useKeyboardHeight } from '@/utils/use-keyboard-height';
 
 const WEB_INPUT_NO_OUTLINE = { outlineStyle: 'none' } as unknown as TextStyle;
+
+const TERMS_URL = 'https://emcahell.github.io/simplestock-landing/terminos/';
+const PRIVACY_URL = 'https://emcahell.github.io/simplestock-landing/privacidad/';
+
+function openExternal(url: string) {
+  void WebBrowser.openBrowserAsync(url);
+}
 
 export default function BienvenidaScreen() {
   const { colors } = useThemePreference();
@@ -98,6 +106,30 @@ export default function BienvenidaScreen() {
               {saving ? 'Guardando...' : 'Comenzar'}
             </Text>
           </Pressable>
+
+          <View className="mt-5 px-1">
+            <Text className="text-center text-xs leading-4 text-on-surface-variant">
+              {'Al continuar aceptas los '}
+              <Text
+                accessibilityRole="link"
+                onPress={() => openExternal(TERMS_URL)}
+                className="text-primary"
+                style={{ fontWeight: '500' }}
+              >
+                Términos y Condiciones
+              </Text>
+              {' y la '}
+              <Text
+                accessibilityRole="link"
+                onPress={() => openExternal(PRIVACY_URL)}
+                className="text-primary"
+                style={{ fontWeight: '500' }}
+              >
+                Política de Privacidad
+              </Text>
+              .
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>
