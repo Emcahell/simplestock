@@ -30,7 +30,8 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme();
-  const [mode, setMode] = useState<ThemeName | 'system'>('system');
+  // Por defecto el tema es claro; el usuario puede cambiarlo y se persiste.
+  const [mode, setMode] = useState<ThemeName | 'system'>('light');
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
