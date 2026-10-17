@@ -2,7 +2,7 @@
   "expo": {
     "name": "simplestock",
     "slug": "simplestock",
-    "icon": "./assets/simplestock-logo.png",
+    "icon": "./src/assets/simplestock-logo.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "simplestock",
@@ -12,7 +12,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/simplestock-logo.png",
+        "foregroundImage": "./src/assets/simplestock-logo.png",
         "backgroundColor": "#E6F4FE"
       },
       "predictiveBackGestureEnabled": false,
