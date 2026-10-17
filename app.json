@@ -2,6 +2,7 @@
   "expo": {
     "name": "simplestock",
     "slug": "simplestock",
+    "icon": "./assets/simplestock-logo.png",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "simplestock",
@@ -11,6 +12,7 @@
     },
     "android": {
       "adaptiveIcon": {
+        "foregroundImage": "./assets/simplestock-logo.png",
         "backgroundColor": "#E6F4FE"
       },
       "predictiveBackGestureEnabled": false,
@@ -20,14 +22,16 @@
       "output": "static",
       "bunler": "metro"
     },
-    "plugins": [
-      "expo-router",
-      "expo-splash-screen",
-      "expo-sqlite"
-    ],
+    "plugins": ["expo-router", "expo-splash-screen", "expo-sqlite"],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "26b39b78-084c-4b7a-85c6-af1a397239cf"
+      }
     }
   }
 }
